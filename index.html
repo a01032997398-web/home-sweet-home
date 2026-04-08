@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Sweet Home — 가족 추억 아카이브</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f0f;
+  --bg2: #1a1a1a;
+  --bg3: #242424;
+  --text: #f0ece4;
+  --text2: #9e9a94;
+  --text3: #5a5652;
+  --accent: #c9a96e;
+  --accent2: #8b6f47;
+  --green: #4a8c6f;
+  --blue: #4a6f8c;
+  --pink: #8c4a6f;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-weight: 300; min-height: 100vh; }
+
+/* Header */
+.header { padding: 2rem 1.5rem 1rem; border-bottom: 1px solid #2a2a2a; }
+.header-title { font-family: 'Noto Serif KR', serif; font-size: 1.6rem; font-weight: 700; color: var(--accent); letter-spacing: 0.05em; }
+.header-sub { font-size: 0.75rem; color: var(--text3); margin-top: 0.25rem; letter-spacing: 0.1em; }
+
+/* Upload */
+.upload-section { padding: 1rem 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; border-bottom: 1px solid #2a2a2a; }
+.drop-zone { border: 1px dashed #3a3a3a; border-radius: var(--radius); padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+.drop-zone:hover, .drop-zone.drag { border-color: var(--accent); background: #1a1a0a; }
+.drop-zone.done { border-color: var(--green); border-style: solid; }
+.drop-zone input { display: none; }
+.dz-label { font-size: 0.8rem; font-weight: 500; color: var(--text2); margin-bottom: 0.25rem; }
+.dz-sub { font-size: 0.7rem; color: var(--text3); }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border-bottom: 1px solid #2a2a2a; }
+.stat { padding: 1rem 1.5rem; border-right: 1px solid #2a2a2a; }
+.stat:last-child { border-right: none; }
+.stat-label { font-size: 0.65rem; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
+.stat-value { font-size: 1.4rem; font-weight: 500; color: var(--accent); }
+
+/* Nav */
+.nav { display: flex; border-bottom: 1px solid #2a2a2a; overflow-x: auto; }
+.nav button { padding: 0.75rem 1.25rem; font-size: 0.8rem; color: var(--text3); background: none; border: none; cursor: pointer; white-space: nowrap; font-family: inherit; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.nav button.on { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Sections */
+.sec { display: none; } .sec.on { display: block; }
+
+/* Timeline */
+.tl-year { padding: 0.75rem 1.5rem 0.25rem; font-size: 0.7rem; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase; background: var(--bg2); position: sticky; top: 0; z-index: 10; }
+.tl-item { display: flex; gap: 1rem; padding: 0.75rem 1.5rem; border-bottom: 1px solid #1e1e1e; align-items: flex-start; }
+.tl-item:hover { background: var(--bg2); }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.35rem; }
+.tl-date { font-size: 0.7rem; color: var(--text3); width: 50px; flex-shrink: 0; padding-top: 0.1rem; }
+.tl-body { flex: 1; }
+.tl-title { font-size: 0.85rem; font-weight: 500; color: var(--text); line-height: 1.4; }
+.tl-meta { font-size: 0.7rem; color: var(--text3); margin-top: 0.2rem; }
+.tl-link { font-size: 0.7rem; color: var(--accent); margin-left: 0.5rem; text-decoration: none; }
+.tl-link:hover { text-decoration: underline; }
+.video-badge { font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 4px; background: #2a2000; color: var(--accent); margin-left: 0.4rem; vertical-align: middle; }
+
+/* Albums */
+.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 1px; background: #1e1e1e; }
+.album-card { background: var(--bg); padding: 1.25rem 1rem; cursor: pointer; transition: background 0.2s; }
+.album-card:hover { background: var(--bg2); }
+.album-thumb { width: 100%; aspect-ratio: 4/3; border-radius: 8px; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; }
+.album-name { font-size: 0.8rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
+.album-meta { font-size: 0.7rem; color: var(--text3); }
+.album-btn { display: block; margin-top: 0.6rem; padding: 0.35rem; text-align: center; font-size: 0.7rem; color: var(--accent); border: 1px solid #3a2a00; border-radius: 6px; text-decoration: none; transition: background 0.2s; }
+.album-btn:hover { background: #2a1a00; }
+
+/* Year bars */
+.year-section { padding: 1rem 1.5rem; }
+.year-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+.year-label { font-size: 0.75rem; color: var(--text3); width: 36px; text-align: right; }
+.year-bar-bg { flex: 1; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.year-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.year-count { font-size: 0.72rem; color: var(--text2); width: 50px; text-align: right; }
+
+/* Load more */
+.load-more { padding: 1rem 1.5rem; text-align: center; font-size: 0.75rem; color: var(--text3); border-top: 1px solid #1e1e1e; cursor: pointer; }
+.load-more:hover { color: var(--accent); }
+
+@media (max-width: 480px) {
+  .stats { grid-template-columns: repeat(2,1fr); }
+  .stat { border-bottom: 1px solid #2a2a2a; }
+  .upload-section { grid-template-columns: 1fr; }
+  .album-grid { grid-template-columns: repeat(2,1fr); }
+  .header-title { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">Home Sweet Home</div>
+  <div class="header-sub">30년 가족 추억 아카이브</div>
+</div>
+
+<div class="upload-section">
+  <div class="drop-zone" id="dz1" onclick="document.getElementById('ci1').click()">
+    <input type="file" id="ci1" accept=".csv">
+    <div class="dz-label">사진 CSV</div>
+    <div class="dz-sub">가족사진_목록.csv</div>
+  </div>
+  <div class="drop-zone" id="dz2" onclick="document.getElementById('ci2').click()">
+    <input type="file" id="ci2" accept=".csv">
+    <div class="dz-label">동영상 CSV</div>
+    <div class="dz-sub">가족동영상_목록.csv</div>
+  </div>
+</div>
+
+<div class="stats" id="statsBar" style="display:none;">
+  <div class="stat"><div class="stat-label">사진</div><div class="stat-value" id="sStat">0</div></div>
+  <div class="stat"><div class="stat-label">동영상</div><div class="stat-value" id="vStat">0</div></div>
+  <div class="stat"><div class="stat-label">연도</div><div class="stat-value" id="yStat">-</div></div>
+  <div class="stat"><div class="stat-label">이벤트</div><div class="stat-value" id="eStat">0</div></div>
+</div>
+
+<div class="nav" id="mainNav" style="display:none;">
+  <button class="on" onclick="show('tl',this)">타임라인</button>
+  <button onclick="show('alb',this)">앨범</button>
+  <button onclick="show('yr',this)">연도 통계</button>
+</div>
+
+<div id="tl" class="sec on"><div id="tlList"></div></div>
+<div id="alb" class="sec"><div class="album-grid" id="albGrid"></div></div>
+<div id="yr" class="sec"><div class="year-section" id="yrBars"></div></div>
+
+<script>
+const ALBUMS = [
+  {keys:['동지중해','크루즈'],title:'동지중해 크루즈',date:'2025.09',desc:'크로아티아·베니스·코토르',cnt:'373장',url:'https://photos.app.goo.gl/wqa8u1xxJtFM2TR87',color:'#4a8c6f'},
+  {keys:['독일'],title:'독일 자유여행',date:'2025.02',desc:'퓌센·로텐부르그·뮌헨',cnt:'338장',url:'https://photos.app.goo.gl/v6T6H1uJ7M9krdYL8',color:'#534AB7'},
+  {keys:['필리핀','보홀'],title:'필리핀 보홀',date:'2024.12',desc:'보홀섬·초콜릿힐',cnt:'501장',url:'https://photos.app.goo.gl/WcaPW74zBUkHEhHW6',color:'#c9a96e'},
+  {keys:['제주'],title:'제주도 여행',date:'2021.01',desc:'제주 전역 가족여행',cnt:'884장',url:'https://photos.app.goo.gl/zCTxeE2R9crTrDUSA',color:'#4a6f8c'},
+];
+
+let photoRows=[], videoRows=[], allEvents=[], shownCount=50;
+
+function getAlbum(f){ for(const a of ALBUMS) if(a.keys.some(k=>f.includes(k))) return a; return null; }
+
+function getTag(f){
+  const fl=f.toLowerCase();
+  if(['크루즈','독일','필리핀','보홀','태국','캄보디아','인도','대만','스페인','유럽','크로아티아','베니스','카파도키아','퓌센','몬트리올','뉴욕','보스턴','잔시','오차'].some(k=>fl.includes(k)))
+    return {label:'해외여행',color:'#4a8c6f'};
+  if(['속초','평창','정동진','거제','통영','안면도','진도','광주','홍천','양재','의정부','제주','서귀포','애월','경안','천진암','한남','이태원','양재'].some(k=>fl.includes(k)))
+    return {label:'국내여행',color:'#4a6f8c'};
+  if(['결혼','생축','송년','졸업','추모','장모','아들','민지','구순','잔치','공연','연극'].some(k=>fl.includes(k)))
+    return {label:'가족행사',color:'#8c4a6f'};
+  if(['트레킹','소노캄','흔들','설중','산책','폭포'].some(k=>fl.includes(k)))
+    return {label:'트레킹',color:'#8c6f4a'};
+  return {label:'기타',color:'#5a5652'};
+}
+
+function parseDate(folder,exif,created){
+  if(exif&&exif.length>=4){const y=exif.substring(0,4),m=exif.substring(5,7)||'';if(parseInt(y)>=1990)return{year:parseInt(y),display:m?`${y}.${m}`:y};}
+  const match=folder.match(/^(\d{4})(\d{2})?/);
+  if(match&&parseInt(match[1])>=1990)return{year:parseInt(match[1]),display:match[2]?`${match[1]}.${match[2]}`:match[1]};
+  if(created&&created.length>=7)return{year:parseInt(created.substring(0,4)),display:`${created.substring(0,4)}.${created.substring(5,7)}`};
+  return null;
+}
+
+function parseCSV(text){
+  const lines=text.split('\n');
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).filter(l=>l.trim()).map(line=>{
+    const vals=[];let cur='',inQ=false;
+    for(const ch of line){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){vals.push(cur);cur='';}else cur+=ch;}
+    vals.push(cur);
+    const obj={};headers.forEach((h,i)=>obj[h]=(vals[i]||'').trim());return obj;
+  });
+}
+
+function buildDashboard(){
+  const folderMap={};
+  [...photoRows.map(r=>({...r,_t:'p'})),...videoRows.map(r=>({...r,_t:'v'}))].forEach(r=>{
+    const f=r['상위폴더']||'기타';
+    if(!folderMap[f])folderMap[f]={folder:f,p:0,v:0,exif:r['EXIF촬영날짜']||'',created:r['생성날짜']||''};
+    folderMap[f][r._t]++;
+  });
+
+  allEvents=Object.values(folderMap).map(f=>({...f,dt:parseDate(f.folder,f.exif,f.created)}))
+    .filter(e=>e.dt).sort((a,b)=>b.dt.year-a.dt.year||b.dt.display.localeCompare(a.dt.display));
+
+  const years=allEvents.map(e=>e.dt.year);
+  document.getElementById('sStat').textContent=photoRows.length.toLocaleString();
+  document.getElementById('vStat').textContent=videoRows.length.toLocaleString();
+  document.getElementById('yStat').textContent=`${Math.min(...years)}~${Math.max(...years)}`;
+  document.getElementById('eStat').textContent=allEvents.length.toLocaleString();
+  document.getElementById('statsBar').style.display='grid';
+  document.getElementById('mainNav').style.display='flex';
+
+  shownCount=50;
+  renderTimeline();
+  renderAlbums();
+  renderYearBars();
+}
+
+function renderTimeline(){
+  const list=document.getElementById('tlList');
+  list.innerHTML='';
+  const slice=allEvents.slice(0,shownCount);
+  let curYear=null;
+
+  slice.forEach(e=>{
+    if(e.dt.year!==curYear){
+      curYear=e.dt.year;
+      const yDiv=document.createElement('div');
+      yDiv.className='tl-year';
+      yDiv.textContent=curYear+'년';
+      list.appendChild(yDiv);
+    }
+    const tag=getTag(e.folder);
+    const alb=getAlbum(e.folder);
+    const item=document.createElement('div');
+    item.className='tl-item';
+    item.innerHTML=`
+      <div class="tl-dot" style="background:${tag.color};"></div>
+      <div class="tl-date">${e.dt.display}</div>
+      <div class="tl-body">
+        <div class="tl-title">${e.folder}${e.v>0?`<span class="video-badge">동영상 ${e.v}</span>`:''}${alb?`<a class="tl-link" href="${alb.url}" target="_blank">보기 →</a>`:''}</div>
+        <div class="tl-meta">${tag.label} · 사진 ${e.p}장${e.v?` · 동영상 ${e.v}개`:''}</div>
+      </div>`;
+    list.appendChild(item);
+  });
+
+  if(allEvents.length>shownCount){
+    const more=document.createElement('div');
+    more.className='load-more';
+    more.textContent=`+ ${allEvents.length-shownCount}개 더 보기`;
+    more.onclick=()=>{shownCount+=50;renderTimeline();};
+    list.appendChild(more);
+  }
+}
+
+function renderAlbums(){
+  const grid=document.getElementById('albGrid');
+  grid.innerHTML='';
+  ALBUMS.forEach(a=>{
+    const card=document.createElement('div');
+    card.className='album-card';
+    card.innerHTML=`
+      <div class="album-thumb" style="background:${a.color}20;">
+        <div style="width:32px;height:32px;border-radius:8px;background:${a.color};opacity:0.7;"></div>
+      </div>
+      <div class="album-name">${a.title}</div>
+      <div class="album-meta">${a.date} · ${a.cnt}</div>
+      <a class="album-btn" href="${a.url}" target="_blank">Photos에서 보기 →</a>`;
+    grid.appendChild(card);
+  });
+}
+
+function renderYearBars(){
+  const yCnt={};
+  allEvents.forEach(e=>{const y=e.dt.year;yCnt[y]=(yCnt[y]||0)+e.p+e.v;});
+  const sorted=Object.entries(yCnt).sort((a,b)=>b[0]-a[0]);
+  const max=Math.max(...sorted.map(s=>s[1]));
+  const el=document.getElementById('yrBars');
+  el.innerHTML='';
+  sorted.forEach(([y,cnt])=>{
+    const pct=Math.round(cnt/max*100);
+    const hue=200+Math.round(pct*0.8);
+    el.innerHTML+=`
+      <div class="year-row">
+        <span class="year-label">${y}</span>
+        <div class="year-bar-bg"><div class="year-bar-fill" style="width:${pct}%;background:hsl(${hue},50%,45%);"></div></div>
+        <span class="year-count">${cnt.toLocaleString()}</span>
+      </div>`;
+  });
+}
+
+function show(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+function setupDrop(dzId,inputId,type){
+  const dz=document.getElementById(dzId),ci=document.getElementById(inputId);
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])readFile(e.dataTransfer.files[0],type,dz);});
+  ci.addEventListener('change',e=>{if(e.target.files[0])readFile(e.target.files[0],type,dz);});
+}
+
+function readFile(file,type,dz){
+  dz.querySelector('.dz-label').textContent='로딩 중...';
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const rows=parseCSV(e.target.result);
+    if(type==='p')photoRows=rows;else videoRows=rows;
+    dz.classList.add('done');
+    dz.querySelector('.dz-label').textContent=type==='p'?'사진 CSV ✓':'동영상 CSV ✓';
+    dz.querySelector('.dz-sub').textContent=`${rows.length.toLocaleString()}개 로드`;
+    if(photoRows.length>0||videoRows.length>0)buildDashboard();
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+setupDrop('dz1','ci1','p');
+setupDrop('dz2','ci2','v');
+</script>
+</body>
+</html>
