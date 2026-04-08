@@ -3,309 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home Sweet Home — 가족 추억 아카이브</title>
+<title>Home Sweet Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0f0f0f;
-  --bg2: #1a1a1a;
-  --bg3: #242424;
-  --text: #f0ece4;
-  --text2: #9e9a94;
-  --text3: #5a5652;
-  --accent: #c9a96e;
-  --accent2: #8b6f47;
-  --green: #4a8c6f;
-  --blue: #4a6f8c;
-  --pink: #8c4a6f;
-  --radius: 12px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-weight: 300; min-height: 100vh; }
-
-/* Header */
-.header { padding: 2rem 1.5rem 1rem; border-bottom: 1px solid #2a2a2a; }
-.header-title { font-family: 'Noto Serif KR', serif; font-size: 1.6rem; font-weight: 700; color: var(--accent); letter-spacing: 0.05em; }
-.header-sub { font-size: 0.75rem; color: var(--text3); margin-top: 0.25rem; letter-spacing: 0.1em; }
-
-/* Upload */
-.upload-section { padding: 1rem 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; border-bottom: 1px solid #2a2a2a; }
-.drop-zone { border: 1px dashed #3a3a3a; border-radius: var(--radius); padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
-.drop-zone:hover, .drop-zone.drag { border-color: var(--accent); background: #1a1a0a; }
-.drop-zone.done { border-color: var(--green); border-style: solid; }
-.drop-zone input { display: none; }
-.dz-label { font-size: 0.8rem; font-weight: 500; color: var(--text2); margin-bottom: 0.25rem; }
-.dz-sub { font-size: 0.7rem; color: var(--text3); }
-
-/* Stats */
-.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border-bottom: 1px solid #2a2a2a; }
-.stat { padding: 1rem 1.5rem; border-right: 1px solid #2a2a2a; }
-.stat:last-child { border-right: none; }
-.stat-label { font-size: 0.65rem; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
-.stat-value { font-size: 1.4rem; font-weight: 500; color: var(--accent); }
-
-/* Nav */
-.nav { display: flex; border-bottom: 1px solid #2a2a2a; overflow-x: auto; }
-.nav button { padding: 0.75rem 1.25rem; font-size: 0.8rem; color: var(--text3); background: none; border: none; cursor: pointer; white-space: nowrap; font-family: inherit; border-bottom: 2px solid transparent; transition: all 0.2s; }
-.nav button.on { color: var(--accent); border-bottom-color: var(--accent); }
-
-/* Sections */
-.sec { display: none; } .sec.on { display: block; }
-
-/* Timeline */
-.tl-year { padding: 0.75rem 1.5rem 0.25rem; font-size: 0.7rem; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase; background: var(--bg2); position: sticky; top: 0; z-index: 10; }
-.tl-item { display: flex; gap: 1rem; padding: 0.75rem 1.5rem; border-bottom: 1px solid #1e1e1e; align-items: flex-start; }
-.tl-item:hover { background: var(--bg2); }
-.tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.35rem; }
-.tl-date { font-size: 0.7rem; color: var(--text3); width: 50px; flex-shrink: 0; padding-top: 0.1rem; }
-.tl-body { flex: 1; }
-.tl-title { font-size: 0.85rem; font-weight: 500; color: var(--text); line-height: 1.4; }
-.tl-meta { font-size: 0.7rem; color: var(--text3); margin-top: 0.2rem; }
-.tl-link { font-size: 0.7rem; color: var(--accent); margin-left: 0.5rem; text-decoration: none; }
-.tl-link:hover { text-decoration: underline; }
-.video-badge { font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 4px; background: #2a2000; color: var(--accent); margin-left: 0.4rem; vertical-align: middle; }
-
-/* Albums */
-.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 1px; background: #1e1e1e; }
-.album-card { background: var(--bg); padding: 1.25rem 1rem; cursor: pointer; transition: background 0.2s; }
-.album-card:hover { background: var(--bg2); }
-.album-thumb { width: 100%; aspect-ratio: 4/3; border-radius: 8px; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; }
-.album-name { font-size: 0.8rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
-.album-meta { font-size: 0.7rem; color: var(--text3); }
-.album-btn { display: block; margin-top: 0.6rem; padding: 0.35rem; text-align: center; font-size: 0.7rem; color: var(--accent); border: 1px solid #3a2a00; border-radius: 6px; text-decoration: none; transition: background 0.2s; }
-.album-btn:hover { background: #2a1a00; }
-
-/* Year bars */
-.year-section { padding: 1rem 1.5rem; }
-.year-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
-.year-label { font-size: 0.75rem; color: var(--text3); width: 36px; text-align: right; }
-.year-bar-bg { flex: 1; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
-.year-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
-.year-count { font-size: 0.72rem; color: var(--text2); width: 50px; text-align: right; }
-
-/* Load more */
-.load-more { padding: 1rem 1.5rem; text-align: center; font-size: 0.75rem; color: var(--text3); border-top: 1px solid #1e1e1e; cursor: pointer; }
-.load-more:hover { color: var(--accent); }
-
-@media (max-width: 480px) {
-  .stats { grid-template-columns: repeat(2,1fr); }
-  .stat { border-bottom: 1px solid #2a2a2a; }
-  .upload-section { grid-template-columns: 1fr; }
-  .album-grid { grid-template-columns: repeat(2,1fr); }
-  .header-title { font-size: 1.3rem; }
-}
+:root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--text:#f0ece4;--text2:#9e9a94;--text3:#5a5652;--accent:#c9a96e;--green:#4a8c6f;--blue:#4a6f8c;--pink:#8c4a6f;--radius:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans KR",sans-serif;font-weight:300;min-height:100vh;}
+.header{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid #2a2a2a;}
+.header-title{font-family:"Noto Serif KR",serif;font-size:1.5rem;font-weight:700;color:var(--accent);}
+.header-sub{font-size:0.75rem;color:var(--text3);margin-top:0.2rem;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #2a2a2a;}
+.stat{padding:0.875rem 1rem;border-right:1px solid #2a2a2a;}
+.stat:last-child{border-right:none;}
+.stat-label{font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.2rem;}
+.stat-value{font-size:1.3rem;font-weight:500;color:var(--accent);}
+.nav{display:flex;border-bottom:1px solid #2a2a2a;overflow-x:auto;}
+.nav button{padding:0.7rem 1rem;font-size:0.78rem;color:var(--text3);background:none;border:none;cursor:pointer;white-space:nowrap;font-family:inherit;border-bottom:2px solid transparent;transition:all 0.2s;}
+.nav button.on{color:var(--accent);border-bottom-color:var(--accent);}
+.sec{display:none;}.sec.on{display:block;}
+.tl-year{padding:0.6rem 1.25rem 0.2rem;font-size:0.65rem;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase;background:var(--bg2);position:sticky;top:0;z-index:10;}
+.tl-item{display:flex;gap:0.75rem;padding:0.65rem 1.25rem;border-bottom:1px solid #1e1e1e;}
+.tl-item:hover{background:var(--bg2);}
+.tl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:0.35rem;}
+.tl-date{font-size:0.68rem;color:var(--text3);width:48px;flex-shrink:0;padding-top:0.1rem;}
+.tl-body{flex:1;}
+.tl-title{font-size:0.82rem;font-weight:500;color:var(--text);line-height:1.4;}
+.tl-meta{font-size:0.68rem;color:var(--text3);margin-top:0.15rem;}
+.tl-link{font-size:0.68rem;color:var(--accent);margin-left:0.4rem;text-decoration:none;}
+.video-badge{font-size:0.58rem;padding:0.1rem 0.35rem;border-radius:4px;background:#2a2000;color:var(--accent);margin-left:0.35rem;vertical-align:middle;}
+.album-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:#1e1e1e;}
+.album-card{background:var(--bg);padding:1rem;}
+.album-card:hover{background:var(--bg2);}
+.album-thumb{width:100%;aspect-ratio:4/3;border-radius:8px;margin-bottom:0.65rem;display:flex;align-items:center;justify-content:center;}
+.album-name{font-size:0.78rem;font-weight:500;color:var(--text);margin-bottom:0.15rem;}
+.album-meta{font-size:0.67rem;color:var(--text3);}
+.album-btn{display:block;margin-top:0.5rem;padding:0.3rem;text-align:center;font-size:0.67rem;color:var(--accent);border:1px solid #3a2a00;border-radius:6px;text-decoration:none;}
+.album-btn:hover{background:#2a1a00;}
+.year-section{padding:1rem 1.25rem;}
+.year-row{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;}
+.year-label{font-size:0.72rem;color:var(--text3);width:32px;text-align:right;}
+.year-bar-bg{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.year-bar-fill{height:100%;border-radius:3px;}
+.year-count{font-size:0.7rem;color:var(--text2);width:48px;text-align:right;}
+.load-more{padding:1rem;text-align:center;font-size:0.73rem;color:var(--text3);cursor:pointer;border-top:1px solid #1e1e1e;}
+.load-more:hover{color:var(--accent);}
+@media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr);}.stat{border-bottom:1px solid #2a2a2a;}.album-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="header-title">Home Sweet Home</div>
   <div class="header-sub">30년 가족 추억 아카이브</div>
 </div>
-
-<div class="upload-section">
-  <div class="drop-zone" id="dz1" onclick="document.getElementById('ci1').click()">
-    <input type="file" id="ci1" accept=".csv">
-    <div class="dz-label">사진 CSV</div>
-    <div class="dz-sub">가족사진_목록.csv</div>
-  </div>
-  <div class="drop-zone" id="dz2" onclick="document.getElementById('ci2').click()">
-    <input type="file" id="ci2" accept=".csv">
-    <div class="dz-label">동영상 CSV</div>
-    <div class="dz-sub">가족동영상_목록.csv</div>
-  </div>
+<div class="stats">
+  <div class="stat"><div class="stat-label">사진</div><div class="stat-value">48,972</div></div>
+  <div class="stat"><div class="stat-label">동영상</div><div class="stat-value">71</div></div>
+  <div class="stat"><div class="stat-label">이벤트</div><div class="stat-value">664</div></div>
+  <div class="stat"><div class="stat-label">앨범</div><div class="stat-value">4</div></div>
 </div>
-
-<div class="stats" id="statsBar" style="display:none;">
-  <div class="stat"><div class="stat-label">사진</div><div class="stat-value" id="sStat">0</div></div>
-  <div class="stat"><div class="stat-label">동영상</div><div class="stat-value" id="vStat">0</div></div>
-  <div class="stat"><div class="stat-label">연도</div><div class="stat-value" id="yStat">-</div></div>
-  <div class="stat"><div class="stat-label">이벤트</div><div class="stat-value" id="eStat">0</div></div>
-</div>
-
-<div class="nav" id="mainNav" style="display:none;">
+<div class="nav">
   <button class="on" onclick="show('tl',this)">타임라인</button>
   <button onclick="show('alb',this)">앨범</button>
   <button onclick="show('yr',this)">연도 통계</button>
 </div>
-
 <div id="tl" class="sec on"><div id="tlList"></div></div>
 <div id="alb" class="sec"><div class="album-grid" id="albGrid"></div></div>
 <div id="yr" class="sec"><div class="year-section" id="yrBars"></div></div>
-
 <script>
-const ALBUMS = [
-  {keys:['동지중해','크루즈'],title:'동지중해 크루즈',date:'2025.09',desc:'크로아티아·베니스·코토르',cnt:'373장',url:'https://photos.app.goo.gl/wqa8u1xxJtFM2TR87',color:'#4a8c6f'},
-  {keys:['독일'],title:'독일 자유여행',date:'2025.02',desc:'퓌센·로텐부르그·뮌헨',cnt:'338장',url:'https://photos.app.goo.gl/v6T6H1uJ7M9krdYL8',color:'#534AB7'},
-  {keys:['필리핀','보홀'],title:'필리핀 보홀',date:'2024.12',desc:'보홀섬·초콜릿힐',cnt:'501장',url:'https://photos.app.goo.gl/WcaPW74zBUkHEhHW6',color:'#c9a96e'},
-  {keys:['제주'],title:'제주도 여행',date:'2021.01',desc:'제주 전역 가족여행',cnt:'884장',url:'https://photos.app.goo.gl/zCTxeE2R9crTrDUSA',color:'#4a6f8c'},
+const EVENTS=[{"folder": "221211 의정부 가족모임", "p": 14, "v": 0, "year": 2212, "display": "2212.11"}, {"folder": "221021 오대산 트랙킹, 최이사", "p": 11, "v": 0, "year": 2210, "display": "2210.21"}, {"folder": "220517 민지생일, 삼성동 아웃백", "p": 18, "v": 0, "year": 2205, "display": "2205.17"}, {"folder": "220109 덕유산", "p": 18, "v": 0, "year": 2201, "display": "2201.09"}, {"folder": "211108 청담 호족반", "p": 16, "v": 0, "year": 2111, "display": "2111.08"}, {"folder": "210218 분당", "p": 17, "v": 0, "year": 2102, "display": "2102.18"}, {"folder": "210101 신년축하 가족", "p": 5, "v": 0, "year": 2101, "display": "2101.01"}, {"folder": "20260131 동두천 추모원", "p": 11, "v": 0, "year": 2026, "display": "2026.01"}, {"folder": "20260222_속초 시니어방", "p": 36, "v": 0, "year": 2026, "display": "2026.02"}, {"folder": "20250108 한남관저 집회", "p": 8, "v": 0, "year": 2025, "display": "2025.01"}, {"folder": "20250128 중대물빛 설중산책", "p": 37, "v": 0, "year": 2025, "display": "2025.01"}, {"folder": "0228 프랑크푸르트", "p": 151, "v": 0, "year": 2025, "display": "2025.02"}, {"folder": "0301 괴팅겐", "p": 152, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0302 뷔르츠부르크", "p": 205, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0303 로텐부르그", "p": 291, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0304 밤베르크", "p": 124, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0305 뮌헨1", "p": 102, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0306 뮌헨2", "p": 212, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0307 퓌센", "p": 338, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0308 린더호프", "p": 83, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "0309 하이델베르그", "p": 127, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "BMW", "p": 100, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "괴팅겐", "p": 4, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "로텐부르크", "p": 29, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "뮌헨", "p": 26, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "밤베르크", "p": 35, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "뷔르츠부르그", "p": 12, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "알프제", "p": 27, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "프랑크푸르트", "p": 16, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "하이델베르그", "p": 31, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "호헨슈방가우", "p": 23, "v": 0, "year": 2025, "display": "2025.03"}, {"folder": "202503_독일자유여행", "p": 0, "v": 21, "year": 2025, "display": "2025.03"}, {"folder": "20250427 권현미 61 생축", "p": 3, "v": 0, "year": 2025, "display": "2025.04"}, {"folder": "20250427 탑동추모원_오름카페", "p": 26, "v": 0, "year": 2025, "display": "2025.04"}, {"folder": "20250516 아들생축_이태원", "p": 15, "v": 0, "year": 2025, "display": "2025.05"}, {"folder": "20250627 민지생축_양재동", "p": 14, "v": 0, "year": 2025, "display": "2025.06"}, {"folder": "20250628 트래킹여행_평창정동진", "p": 140, "v": 0, "year": 2025, "display": "2025.06"}, {"folder": "20250713 연극관람_예술의전당", "p": 11, "v": 0, "year": 2025, "display": "2025.07"}, {"folder": "20250719 이정우&서옥인 아들 결혼식", "p": 27, "v": 0, "year": 2025, "display": "2025.07"}, {"folder": "20250720 천진암_장모님", "p": 12, "v": 0, "year": 2025, "display": "2025.07"}, {"folder": "20250912_13 밀란베로나", "p": 261, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250914 베니스 바리_마테라", "p": 180, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250915 코르푸", "p": 174, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250916 자킨토스", "p": 104, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250917 케팔로니아", "p": 189, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250919 크로아티아 스플리트", "p": 373, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250920 베니스", "p": 302, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250921 트레비소", "p": 120, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250922 밀란", "p": 168, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "20250922 시르미오네", "p": 94, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "AI수정", "p": 48, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "결혼35주년_동부지중해&이탈리아소도시", "p": 11, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "권현미 추천", "p": 12, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "제임스", "p": 226, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "페라스트", "p": 200, "v": 0, "year": 2025, "display": "2025.09"}, {"folder": "코토르", "p": 169, "v": 0, "year": 2025, "display": "2025.10"}, {"folder": "20251102_속초 소노캄_흔들바위", "p": 85, "v": 0, "year": 2025, "display": "2025.11"}, {"folder": "20251108_의정부 승마공원_영경모친 구순연", "p": 9, "v": 0, "year": 2025, "display": "2025.11"}, {"folder": "20251122_순님아들 결혼식", "p": 28, "v": 0, "year": 2025, "display": "2025.11"}, {"folder": "20251206 K-Will 송년공연", "p": 19, "v": 0, "year": 2025, "display": "2025.12"}, {"folder": "20240103 갈매스칸센 상가 현황", "p": 22, "v": 0, "year": 2024, "display": "2024.01"}, {"folder": "20240111 승훈취업턱(키친마이야르)", "p": 12, "v": 0, "year": 2024, "display": "2024.01"}, {"folder": "20240217 금전수 꽃", "p": 11, "v": 0, "year": 2024, "display": "2024.02"}, {"folder": "20240220 2층 분갈이", "p": 3, "v": 0, "year": 2024, "display": "2024.02"}, {"folder": "20240220 아들 졸업식", "p": 248, "v": 0, "year": 2024, "display": "2024.02"}, {"folder": "☆2024 아들 회사 생활", "p": 2, "v": 0, "year": 2024, "display": "2024.03"}, {"folder": "0329 다낭", "p": 77, "v": 0, "year": 2024, "display": "2024.03"}, {"folder": "0330 후이안", "p": 214, "v": 0, "year": 2024, "display": "2024.03"}, {"folder": "0331 골든브릿지", "p": 119, "v": 0, "year": 2024, "display": "2024.03"}, {"folder": "0401 다낭", "p": 66, "v": 0, "year": 2024, "display": "2024.04"}, {"folder": "20240505 권현미 회갑", "p": 3, "v": 0, "year": 2024, "display": "2024.05"}, {"folder": "20240512 양평 알공예", "p": 41, "v": 0, "year": 2024, "display": "2024.05"}, {"folder": "20240517 놉스삼성 승훈27생파", "p": 3, "v": 0, "year": 2024, "display": "2024.05"}, {"folder": "20240623 강화 동막해수욕장", "p": 32, "v": 0, "year": 2024, "display": "2024.06"}, {"folder": "20240629 민지 생파 양재 엘타워", "p": 16, "v": 0, "year": 2024, "display": "2024.06"}, {"folder": "20240714_강화 스페인마을", "p": 113, "v": 0, "year": 2024, "display": "2024.07"}, {"folder": "8월11일 강문해변", "p": 61, "v": 0, "year": 2024, "display": "2024.08"}, {"folder": "8월12일 월정사", "p": 72, "v": 0, "year": 2024, "display": "2024.08"}, {"folder": "8월13일 발왕산", "p": 50, "v": 0, "year": 2024, "display": "2024.08"}, {"folder": "20240928_마눌 홍콩여행", "p": 40, "v": 0, "year": 2024, "display": "2024.09"}, {"folder": "20241014_34주년 터키식당", "p": 28, "v": 0, "year": 2024, "display": "2024.10"}, {"folder": "20241016_홈즈추계워크숍", "p": 108, "v": 0, "year": 2024, "display": "2024.10"}, {"folder": "20241027_스페인조각공원_곤지암", "p": 50, "v": 0, "year": 2024, "display": "2024.10"}, {"folder": "20241103_홍천 선마을", "p": 18, "v": 0, "year": 2024, "display": "2024.11"}, {"folder": "20241110 경안습지생태공원", "p": 135, "v": 0, "year": 2024, "display": "2024.11"}, {"folder": "20241117 광주 천진암", "p": 238, "v": 0, "year": 2024, "display": "2024.11"}, {"folder": "20241128_광주폭설", "p": 7, "v": 0, "year": 2024, "display": "2024.11"}, {"folder": "20241201 진도 솔비치", "p": 1, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "20241221 가족 송년회, 의정부 긴자", "p": 23, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "20241225 필리핀 보홀", "p": 501, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "1일차", "p": 236, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "2일차", "p": 191, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "3일차", "p": 195, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "동영상용", "p": 64, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "큐슈동영상용베스트셀렉", "p": 62, "v": 0, "year": 2024, "display": "2024.12"}, {"folder": "221231 가족송년", "p": 14, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "230128 이층 리뉴얼", "p": 7, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "230128 장모님 91생신", "p": 3, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "230129 리마인드웨딩,가족사진 원본", "p": 91, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "230129 스튜디오 가족사진,안산", "p": 104, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "230228 수염얼굴", "p": 7, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "권현미님 참고파일", "p": 56, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "메인", "p": 9, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "액자", "p": 11, "v": 0, "year": 2023, "display": "2023.01"}, {"folder": "230304 성환아들결혼", "p": 7, "v": 0, "year": 2023, "display": "2023.03"}, {"folder": "230408 스칸센", "p": 22, "v": 0, "year": 2023, "display": "2023.03"}, {"folder": "230401 서래 알아차림, 60축하", "p": 24, "v": 0, "year": 2023, "display": "2023.04"}, {"folder": "230430 의정부, 60축하", "p": 8, "v": 0, "year": 2023, "display": "2023.04"}, {"folder": "230501 테라스 정원", "p": 21, "v": 0, "year": 2023, "display": "2023.04"}, {"folder": "0402_유후인", "p": 102, "v": 0, "year": 2023, "display": "2023.04"}, {"folder": "0403_후쿠오카", "p": 238, "v": 0, "year": 2023, "display": "2023.04"}, {"folder": "20230630 처가4남매 용평 골프", "p": 8, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "230517 텍사스 데 브라질, 승훈26", "p": 47, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "0521 거북선광장,여수밤바다", "p": 85, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "0522 라마다 호텔풀", "p": 42, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "0522 미남크루즈", "p": 72, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "0522 아트랜드", "p": 167, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "0522 향일암", "p": 106, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "0523 Fort & Port", "p": 36, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "0523 순천만국가정원", "p": 56, "v": 0, "year": 2023, "display": "2023.05"}, {"folder": "20230629 용평 마눌 첫라운드", "p": 5, "v": 0, "year": 2023, "display": "2023.06"}, {"folder": "20230910 빨래방 시장조사", "p": 149, "v": 0, "year": 2023, "display": "2023.08"}, {"folder": "20230923 손한결 결혼식", "p": 20, "v": 0, "year": 2023, "display": "2023.09"}, {"folder": "20231003 추석 차례", "p": 4, "v": 0, "year": 2023, "display": "2023.09"}, {"folder": "20231003 용평 강릉 오대산 선재길", "p": 93, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "4일차(15일)", "p": 5, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "ALOPT HOTEL", "p": 4, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "대만동영상용베스트셀렉", "p": 174, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "스펀(천등날리기)", "p": 31, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "아류해상공원(여왕머리)", "p": 87, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "지우펀(홍등거리)", "p": 60, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "화련계곡(태로각협곡,청수단애,장춘사)", "p": 377, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "101타워", "p": 94, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "국립고궁박물원", "p": 214, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "라오허제야시장", "p": 29, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "자우궁(도교사당)", "p": 15, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "중정기념당", "p": 89, "v": 0, "year": 2023, "display": "2023.10"}, {"folder": "20231101 서울추모공원", "p": 32, "v": 0, "year": 2023, "display": "2023.11"}, {"folder": "20231104 의정부 아나키아", "p": 10, "v": 0, "year": 2023, "display": "2023.11"}, {"folder": "14캄보디아베스트셀렉", "p": 350, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "마눌폰", "p": 698, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "마이폰", "p": 774, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "풍경정리", "p": 59, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "170_1219", "p": 113, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "173_1221", "p": 72, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "174_1222", "p": 288, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "175_1223", "p": 180, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "176_1224", "p": 160, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "177_1225", "p": 186, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "nx10_베스트셀렉", "p": 211, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "마눌폰베스트셀렉", "p": 179, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "마인폰베스트셀렉", "p": 152, "v": 0, "year": 2023, "display": "2023.12"}, {"folder": "202312_인도여행", "p": 0, "v": 5, "year": 2023, "display": "2023.12"}, {"folder": "220131 설", "p": 6, "v": 0, "year": 2022, "display": "2022.01"}, {"folder": "220201 방배", "p": 7, "v": 0, "year": 2022, "display": "2022.02"}, {"folder": "220204 양양, 속초", "p": 170, "v": 0, "year": 2022, "display": "2022.02"}, {"folder": "고성", "p": 30, "v": 0, "year": 2022, "display": "2022.02"}, {"folder": "속초", "p": 50, "v": 0, "year": 2022, "display": "2022.02"}, {"folder": "양양", "p": 70, "v": 0, "year": 2022, "display": "2022.02"}, {"folder": "외설악", "p": 19, "v": 0, "year": 2022, "display": "2022.02"}, {"folder": "220308 알파코 2차 발표", "p": 3, "v": 0, "year": 2022, "display": "2022.03"}, {"folder": "220323 광주퇴촌, a loaf slice piece", "p": 10, "v": 0, "year": 2022, "display": "2022.03"}, {"folder": "220416 알파코 BBQ", "p": 6, "v": 0, "year": 2022, "display": "2022.04"}, {"folder": "2205 승훈생일, 칸티푸르", "p": 5, "v": 0, "year": 2022, "display": "2022.05"}, {"folder": "220504 경주, 통도사", "p": 204, "v": 0, "year": 2022, "display": "2022.05"}, {"folder": "220528 강화 스페인마을", "p": 99, "v": 0, "year": 2022, "display": "2022.05"}, {"folder": "220617 알파코 수료식", "p": 12, "v": 0, "year": 2022, "display": "2022.06"}, {"folder": "220623 제주, 애월", "p": 298, "v": 0, "year": 2022, "display": "2022.06"}, {"folder": "220809 집, 비피해", "p": 4, "v": 0, "year": 2022, "display": "2022.08"}, {"folder": "220815 한탄강", "p": 15, "v": 0, "year": 2022, "display": "2022.08"}, {"folder": "220820 남양주, cafe daenerys", "p": 22, "v": 0, "year": 2022, "display": "2022.08"}, {"folder": "220907 민지 발표", "p": 5, "v": 0, "year": 2022, "display": "2022.09"}, {"folder": "221001 연천, 해바라기", "p": 16, "v": 0, "year": 2022, "display": "2022.10"}, {"folder": "221003 제주, 서귀포", "p": 364, "v": 0, "year": 2022, "display": "2022.10"}, {"folder": "221011 갈매스칸센", "p": 11, "v": 0, "year": 2022, "display": "2022.10"}, {"folder": "221013 결혼기념일", "p": 8, "v": 0, "year": 2022, "display": "2022.10"}, {"folder": "221015 김이사 결혼식", "p": 10, "v": 0, "year": 2022, "display": "2022.10"}, {"folder": "221015 남한산성", "p": 73, "v": 0, "year": 2022, "display": "2022.10"}, {"folder": "221029 서신딸결혼", "p": 11, "v": 0, "year": 2022, "display": "2022.10"}, {"folder": "221105 고기리 산사랑", "p": 3, "v": 0, "year": 2022, "display": "2022.11"}, {"folder": "221217 용평 오대산", "p": 45, "v": 0, "year": 2022, "display": "2022.12"}, {"folder": "221230 충남 보령", "p": 225, "v": 0, "year": 2022, "display": "2022.12"}, {"folder": "210205 홈 마눌", "p": 15, "v": 0, "year": 2021, "display": "2021.02"}, {"folder": "210211구정", "p": 11, "v": 0, "year": 2021, "display": "2021.02"}, {"folder": "210418 양주 장인묘", "p": 2, "v": 0, "year": 2021, "display": "2021.04"}, {"folder": "210424 화담숲 김K", "p": 7, "v": 0, "year": 2021, "display": "2021.04"}, {"folder": "210612 장모님 서류", "p": 14, "v": 0, "year": 2021, "display": "2021.06"}, {"folder": "210627 정선하이원 김K", "p": 93, "v": 0, "year": 2021, "display": "2021.06"}, {"folder": "210813 삼동 대게", "p": 4, "v": 0, "year": 2021, "display": "2021.08"}, {"folder": "210821 영선암", "p": 13, "v": 0, "year": 2021, "display": "2021.08"}, {"folder": "210829 안면도, 제천", "p": 174, "v": 0, "year": 2021, "display": "2021.08"}, {"folder": "211013 결혼기념", "p": 13, "v": 0, "year": 2021, "display": "2021.10"}, {"folder": "211029 전곡 국화전시회", "p": 18, "v": 0, "year": 2021, "display": "2021.10"}, {"folder": "기장아홉산숲", "p": 97, "v": 0, "year": 2021, "display": "2021.10"}, {"folder": "남천문화마을", "p": 45, "v": 0, "year": 2021, "display": "2021.10"}, {"folder": "문경새제", "p": 35, "v": 0, "year": 2021, "display": "2021.10"}, {"folder": "해운대", "p": 57, "v": 0, "year": 2021, "display": "2021.10"}, {"folder": "211106 문경새재", "p": 75, "v": 0, "year": 2021, "display": "2021.11"}, {"folder": "211119 평창, 대관령", "p": 102, "v": 0, "year": 2021, "display": "2021.11"}, {"folder": "211204 송리단길", "p": 5, "v": 0, "year": 2021, "display": "2021.12"}, {"folder": "자동 올리기", "p": 122, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "04 일본 교육", "p": 15, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "12 강화도", "p": 26, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "12 민지생일", "p": 4, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "12 코엑스", "p": 8, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 가마로", "p": 29, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 강릉", "p": 59, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 경주", "p": 133, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 민지 고교졸업", "p": 45, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 부산  모자", "p": 21, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 속초", "p": 14, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 송년", "p": 6, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 안동", "p": 204, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 인천", "p": 67, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 창덕궁", "p": 115, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 천안 독립기념관", "p": 22, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 철원 부친", "p": 14, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 통영", "p": 62, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "13 하나", "p": 11, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 강화도", "p": 86, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 거제 외도", "p": 145, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 광릉", "p": 39, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 담양", "p": 98, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 동유럽 현미", "p": 53, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 서천", "p": 24, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 승훈 중학졸업", "p": 217, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 안성", "p": 73, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 용평 처가", "p": 18, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 전주,진안", "p": 155, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 정동진", "p": 167, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 청계산", "p": 3, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "14 포항", "p": 122, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 가평,춘천", "p": 112, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 강화 등반", "p": 41, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 남해", "p": 130, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 북촌 한옥마을", "p": 58, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 안면도", "p": 50, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 양수리", "p": 83, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 용평 처가", "p": 73, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 재옥이모네", "p": 8, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 팔순", "p": 153, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 한탄강 캠프", "p": 8, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 헤이리 부친", "p": 43, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "15 현리캠프", "p": 31, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "16 김k 결혼", "p": 33, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "16 동두천 산속비버", "p": 42, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "16 여의도 벚꽃", "p": 10, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 강릉 여름", "p": 53, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 낙선재", "p": 17, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 대학로", "p": 13, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 동두천 계곡", "p": 11, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 동두천 부친", "p": 3, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 삼동집", "p": 71, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 성남아트", "p": 9, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 인천", "p": 14, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 집들이", "p": 5, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 춘천", "p": 83, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 호주 민지", "p": 83, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "17 홍대", "p": 9, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "18 평택 칠순", "p": 11, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "19 불멍", "p": 7, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "19 송덕방 축하", "p": 42, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "19 승훈 부대개방", "p": 23, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "19 승훈 입퇴소", "p": 69, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "20 가족 설모임, 삼동", "p": 8, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "2001 남이섬", "p": 56, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "ㅁ seung hoon", "p": 11, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0518", "p": 134, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0522", "p": 14, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "mix", "p": 467, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0804", "p": 299, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0807", "p": 3, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0809", "p": 10, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0810", "p": 347, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0811", "p": 25, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0719", "p": 51, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "Photos", "p": 474, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "20 설면회", "p": 5, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0115", "p": 101, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "0116", "p": 51, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "부친", "p": 14, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "향섭", "p": 3, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "현미", "p": 43, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "pops", "p": 11, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "이모지", "p": 53, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "졸업앨범", "p": 54, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "Lovely FIAT", "p": 12, "v": 0, "year": 2020, "display": "2020.01"}, {"folder": "home sweet home", "p": 1, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "11 생일 현미", "p": 8, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "12 의정부 부친", "p": 3, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "14 송년", "p": 12, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "14 중국 남매", "p": 61, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "17 삼동 파티 모음", "p": 53, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "17 성가공연 승훈", "p": 70, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "17 승훈 FIAT", "p": 12, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "18 야구", "p": 21, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "19 안면 김과장", "p": 10, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "20 김철 환갑", "p": 94, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "20 보산동", "p": 6, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "1007", "p": 457, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "진섭", "p": 226, "v": 0, "year": 2020, "display": "2020.02"}, {"folder": "영상모음", "p": 0, "v": 42, "year": 2020, "display": "2020.02"}, {"folder": "Video", "p": 0, "v": 3, "year": 2020, "display": "2020.02"}, {"folder": "00 masterpieces", "p": 10, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "00 가족송년", "p": 1, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "00 소요산", "p": 7, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "00 현미", "p": 15, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "02 대한민국", "p": 20, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "02 미국, 캐나다", "p": 136, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "02 북서울 꿈의 숲", "p": 6, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "03 보드 승훈", "p": 2, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "05 괌", "p": 170, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "05 아이들 미술학원", "p": 19, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "05 에버랜드 민지", "p": 13, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "05 에버랜드 승훈", "p": 6, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "05 요리", "p": 8, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "05 유치원 졸업 승훈", "p": 4, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "06 덕수궁 돌담", "p": 26, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "06 서초초등학교", "p": 8, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "06 수상 민지", "p": 3, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "07 가족송년", "p": 9, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "07 민지 초교졸업", "p": 1, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "08 가족 송년", "p": 18, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "08 부자녀 캠프, 안면도", "p": 5, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "10 민지 작품", "p": 14, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "19 가족 모임", "p": 5, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "20 광릉 고모리", "p": 15, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "10월", "p": 42, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "11월", "p": 3, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "12월", "p": 13, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "1월", "p": 9, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "2월", "p": 20, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "3월", "p": 67, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "4월", "p": 70, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "5월", "p": 34, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "6월", "p": 56, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "7월", "p": 8, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "8월", "p": 22, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "9월", "p": 22, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "독일 4p", "p": 111, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "4p", "p": 175, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "민지 돌", "p": 3, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "민지 돌전", "p": 35, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "민지 돌후", "p": 182, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "승훈 돌", "p": 25, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "승훈 돌전", "p": 62, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "미국 4p", "p": 8, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "괌 4p", "p": 25, "v": 0, "year": 2020, "display": "2020.03"}, {"folder": "20 가족 생일모임, 진섭", "p": 19, "v": 0, "year": 2020, "display": "2020.04"}, {"folder": "2004 테라스", "p": 92, "v": 0, "year": 2020, "display": "2020.04"}, {"folder": "20 부친상", "p": 11, "v": 0, "year": 2020, "display": "2020.05"}, {"folder": "20 골프", "p": 2, "v": 0, "year": 2020, "display": "2020.06"}, {"folder": "20 공연 rent", "p": 16, "v": 0, "year": 2020, "display": "2020.07"}, {"folder": "20 막내 집들이", "p": 1, "v": 0, "year": 2020, "display": "2020.07"}, {"folder": "20 민지 생일", "p": 9, "v": 0, "year": 2020, "display": "2020.07"}, {"folder": "20 부천", "p": 1, "v": 0, "year": 2020, "display": "2020.07"}, {"folder": "20 부친 장례", "p": 14, "v": 0, "year": 2020, "display": "2020.07"}, {"folder": "200828 안면도", "p": 168, "v": 0, "year": 2020, "display": "2020.08"}, {"folder": "20 거제 통영", "p": 409, "v": 0, "year": 2020, "display": "2020.09"}, {"folder": "200919 승훈 전역", "p": 10, "v": 0, "year": 2020, "display": "2020.09"}, {"folder": "20 결혼 30주년", "p": 47, "v": 0, "year": 2020, "display": "2020.10"}, {"folder": "2001 인천 소래", "p": 95, "v": 0, "year": 2020, "display": "2020.10"}, {"folder": "20 바디 프로필, 승훈", "p": 108, "v": 0, "year": 2020, "display": "2020.11"}, {"folder": "201118 친척 모임, 삼동", "p": 16, "v": 0, "year": 2020, "display": "2020.11"}, {"folder": "19 산정호수 겨울", "p": 8, "v": 0, "year": 2019, "display": "2019.01"}, {"folder": "19 남한산성", "p": 6, "v": 0, "year": 2019, "display": "2019.02"}, {"folder": "19 민지 대학졸업", "p": 29, "v": 0, "year": 2019, "display": "2019.02"}, {"folder": "19 영재삼촌 둘째결혼", "p": 15, "v": 0, "year": 2019, "display": "2019.03"}, {"folder": "19 양재천 봄", "p": 6, "v": 0, "year": 2019, "display": "2019.04"}, {"folder": "19 대학로 소극장", "p": 8, "v": 0, "year": 2019, "display": "2019.06"}, {"folder": "19 승훈 면회", "p": 9, "v": 0, "year": 2019, "display": "2019.06"}, {"folder": "0605", "p": 37, "v": 0, "year": 2019, "display": "2019.06"}, {"folder": "0606", "p": 208, "v": 0, "year": 2019, "display": "2019.06"}, {"folder": "0607", "p": 391, "v": 0, "year": 2019, "display": "2019.06"}, {"folder": "0608", "p": 86, "v": 0, "year": 2019, "display": "2019.06"}, {"folder": "19 광릉 수목원", "p": 70, "v": 0, "year": 2019, "display": "2019.07"}, {"folder": "19 동강", "p": 124, "v": 0, "year": 2019, "display": "2019.07"}, {"folder": "0815", "p": 79, "v": 0, "year": 2019, "display": "2019.08"}, {"folder": "191219 승훈 창업경진", "p": 45, "v": 0, "year": 2019, "display": "2019.12"}, {"folder": "180102", "p": 210, "v": 0, "year": 2018, "display": "2018.01"}, {"folder": "180103", "p": 1, "v": 0, "year": 2018, "display": "2018.01"}, {"folder": "18 승훈 공연", "p": 18, "v": 0, "year": 2018, "display": "2018.03"}, {"folder": "0602", "p": 82, "v": 0, "year": 2018, "display": "2018.06"}, {"folder": "0603", "p": 23, "v": 0, "year": 2018, "display": "2018.06"}, {"folder": "0630", "p": 28, "v": 0, "year": 2018, "display": "2018.06"}, {"folder": "18 안면 여름", "p": 49, "v": 0, "year": 2018, "display": "2018.07"}, {"folder": "0707", "p": 22, "v": 0, "year": 2018, "display": "2018.07"}, {"folder": "18 동두천 여름", "p": 23, "v": 0, "year": 2018, "display": "2018.08"}, {"folder": "18 예술의 전당, 42번가", "p": 16, "v": 0, "year": 2018, "display": "2018.08"}, {"folder": "18 민지 졸업전시회", "p": 41, "v": 0, "year": 2018, "display": "2018.09"}, {"folder": "18 전쟁기념관", "p": 8, "v": 0, "year": 2018, "display": "2018.09"}, {"folder": "18 화담 가을", "p": 7, "v": 0, "year": 2018, "display": "2018.10"}, {"folder": "1128", "p": 3, "v": 0, "year": 2018, "display": "2018.11"}, {"folder": "1130", "p": 118, "v": 0, "year": 2018, "display": "2018.11"}, {"folder": "18 낙선재 겨울", "p": 9, "v": 0, "year": 2018, "display": "2018.12"}, {"folder": "1201", "p": 192, "v": 0, "year": 2018, "display": "2018.12"}, {"folder": "monument", "p": 47, "v": 0, "year": 2018, "display": "2018.12"}, {"folder": "2015.12 스페인 1일차", "p": 161, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "139_0115", "p": 23, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "140_0116", "p": 216, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "141_0117", "p": 439, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "142_0118", "p": 231, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "143_0119", "p": 197, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "144_0120", "p": 282, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "145_0121", "p": 206, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "146_0122", "p": 257, "v": 0, "year": 2017, "display": "2017.01"}, {"folder": "17 승훈 고교졸업", "p": 135, "v": 0, "year": 2017, "display": "2017.02"}, {"folder": "17 여주 세종릉", "p": 14, "v": 0, "year": 2017, "display": "2017.04"}, {"folder": "17 고척 야구장", "p": 12, "v": 0, "year": 2017, "display": "2017.07"}, {"folder": "17 처형 난타", "p": 79, "v": 0, "year": 2017, "display": "2017.07"}, {"folder": "17 철원 부친", "p": 2, "v": 0, "year": 2017, "display": "2017.09"}, {"folder": "1006", "p": 254, "v": 0, "year": 2017, "display": "2017.10"}, {"folder": "17 처형 환갑", "p": 5, "v": 0, "year": 2017, "display": "2017.11"}, {"folder": "17 강릉 겨울", "p": 27, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "17 승훈 세례", "p": 11, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171223", "p": 244, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171224", "p": 257, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171226", "p": 54, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171227", "p": 216, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171228", "p": 198, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171229", "p": 515, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171230", "p": 241, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "171231", "p": 80, "v": 0, "year": 2017, "display": "2017.12"}, {"folder": "16 포천 아트밸리 부친", "p": 72, "v": 0, "year": 2016, "display": "2016.01"}, {"folder": "20160120 2016.1.20 포천 아트밸리 부친과 함께", "p": 36, "v": 0, "year": 2016, "display": "2016.01"}, {"folder": "16 민지 마실", "p": 14, "v": 0, "year": 2016, "display": "2016.02"}, {"folder": "16 유럽 민지", "p": 859, "v": 0, "year": 2016, "display": "2016.02"}, {"folder": "16 처가", "p": 4, "v": 0, "year": 2016, "display": "2016.02"}, {"folder": "16 청인 교육", "p": 72, "v": 0, "year": 2016, "display": "2016.04"}, {"folder": "16 한탄강 지질공원 부친", "p": 20, "v": 0, "year": 2016, "display": "2016.04"}, {"folder": "광회", "p": 16, "v": 0, "year": 2016, "display": "2016.04"}, {"folder": "16 고기동", "p": 10, "v": 0, "year": 2016, "display": "2016.05"}, {"folder": "16 승훈 생일", "p": 3, "v": 0, "year": 2016, "display": "2016.05"}, {"folder": "16 의정부 바위소리", "p": 67, "v": 0, "year": 2016, "display": "2016.05"}, {"folder": "16 이태원", "p": 47, "v": 0, "year": 2016, "display": "2016.05"}, {"folder": "16 초성리 처가", "p": 10, "v": 0, "year": 2016, "display": "2016.05"}, {"folder": "16 현미 생일", "p": 7, "v": 0, "year": 2016, "display": "2016.05"}, {"folder": "김석", "p": 13, "v": 0, "year": 2016, "display": "2016.05"}, {"folder": "16 소래 포구", "p": 20, "v": 0, "year": 2016, "display": "2016.06"}, {"folder": "16 산속비버", "p": 16, "v": 0, "year": 2016, "display": "2016.10"}, {"folder": "16 중대 물빛", "p": 37, "v": 0, "year": 2016, "display": "2016.10"}, {"folder": "15 승훈 의지", "p": 5, "v": 0, "year": 2015, "display": "2015.01"}, {"folder": "20150117 2015.1.17 승훈 결연한 의지의 표현", "p": 5, "v": 0, "year": 2015, "display": "2015.01"}, {"folder": "20150214 2015.2.14 안면도 데이트", "p": 30, "v": 0, "year": 2015, "display": "2015.02"}, {"folder": "20150301 2015.3.1 쁘띠 프랑스 & 김유정 기념관 데이트", "p": 1, "v": 0, "year": 2015, "display": "2015.03"}, {"folder": "20150329 2015.3.29 헤이리, 프리미엄 아울렛 - 부친, 현미", "p": 31, "v": 0, "year": 2015, "display": "2015.03"}, {"folder": "15 양재천", "p": 32, "v": 0, "year": 2015, "display": "2015.04"}, {"folder": "15 천안", "p": 8, "v": 0, "year": 2015, "display": "2015.04"}, {"folder": "20150404 2015.4.4 양재천 벚꽃 나들이", "p": 31, "v": 0, "year": 2015, "display": "2015.04"}, {"folder": "20150411 2015.4.11 천안 나들이", "p": 8, "v": 0, "year": 2015, "display": "2015.04"}, {"folder": "20150425 2015.4.25 용평 나들이", "p": 31, "v": 0, "year": 2015, "display": "2015.04"}, {"folder": "15 SDF", "p": 4, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "15 선정릉", "p": 30, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "15 종묘", "p": 81, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "20150504 2015.5.4 종묘 & 북촌 나들이", "p": 78, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "20150510 2015.5.10 선릉,정릉", "p": 30, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "20150520 2015.5.20 SDF", "p": 5, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "20150523 2015.5.23 남해,거제 데이트", "p": 66, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "20150530 2015.5.30 부친 산수연", "p": 54, "v": 0, "year": 2015, "display": "2015.05"}, {"folder": "15 올림픽공원", "p": 15, "v": 0, "year": 2015, "display": "2015.06"}, {"folder": "20150608 2015.6.8 경기 현리 캠핑", "p": 20, "v": 0, "year": 2015, "display": "2015.06"}, {"folder": "20150614 2015.6.14 올림픽 공원 데이트", "p": 14, "v": 0, "year": 2015, "display": "2015.06"}, {"folder": "15 동두천 캠핑 처가", "p": 7, "v": 0, "year": 2015, "display": "2015.07"}, {"folder": "0716", "p": 42, "v": 0, "year": 2015, "display": "2015.07"}, {"folder": "0717", "p": 160, "v": 0, "year": 2015, "display": "2015.07"}, {"folder": "0718", "p": 286, "v": 0, "year": 2015, "display": "2015.07"}, {"folder": "20150716 2015.7.16 태국 파타야 가족 여행", "p": 500, "v": 0, "year": 2015, "display": "2015.07"}, {"folder": "15 남양주 다산", "p": 72, "v": 0, "year": 2015, "display": "2015.08"}, {"folder": "15 동두천 부친", "p": 8, "v": 0, "year": 2015, "display": "2015.08"}, {"folder": "20150822 2015.8.22 다산 정약용 기념관  데이트", "p": 75, "v": 0, "year": 2015, "display": "2015.08"}, {"folder": "20150829 2015.8.29 두물머리 데이트", "p": 42, "v": 0, "year": 2015, "display": "2015.08"}, {"folder": "15 예술의 전당, 가우디", "p": 15, "v": 0, "year": 2015, "display": "2015.10"}, {"folder": "15 파주 벽초지", "p": 141, "v": 0, "year": 2015, "display": "2015.10"}, {"folder": "15 화담숲", "p": 26, "v": 0, "year": 2015, "display": "2015.10"}, {"folder": "20151004 2015.10.4 예술의 전당, 안토니 가우디전", "p": 15, "v": 0, "year": 2015, "display": "2015.10"}, {"folder": "20151017 2015.10.16 곤지암 화담숲 데이트", "p": 26, "v": 0, "year": 2015, "display": "2015.10"}, {"folder": "20151025 2015.10.25 벽초지 수목원", "p": 124, "v": 0, "year": 2015, "display": "2015.10"}, {"folder": "15 송년", "p": 4, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1215", "p": 3, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1216", "p": 53, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1217", "p": 16, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1218", "p": 250, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1219", "p": 261, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1220", "p": 216, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1221", "p": 284, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "1222", "p": 117, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "2015.12 스페인 2일차", "p": 76, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "2015.12 스페인 3일차", "p": 177, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "2015.12 스페인 4일차", "p": 180, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "2015.12 스페인 5일차", "p": 191, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "2015.12 스페인 6일차", "p": 204, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "2015.12 스페인 7일차", "p": 107, "v": 0, "year": 2015, "display": "2015.12"}, {"folder": "14 설 연휴", "p": 7, "v": 0, "year": 2014, "display": "2014.01"}, {"folder": "20140119 2014.1.19  광릉 데이트", "p": 16, "v": 0, "year": 2014, "display": "2014.01"}, {"folder": "20140131 2014.1.31 설.. 가족과 커피 한 잔의 여유", "p": 7, "v": 0, "year": 2014, "display": "2014.01"}, {"folder": "20140223 2014.2.14 남매 중국 여행", "p": 22, "v": 0, "year": 2014, "display": "2014.02"}, {"folder": "20140316 2014.3.16 담양 데이트", "p": 43, "v": 0, "year": 2014, "display": "2014.03"}, {"folder": "20140330 2014.3.30 서천 데이트", "p": 20, "v": 0, "year": 2014, "display": "2014.03"}, {"folder": "20140413 2013.4.13 전주,진안 나들이", "p": 86, "v": 0, "year": 2014, "display": "2014.04"}, {"folder": "20140531 2014.5.31 정동진 가족나들이", "p": 77, "v": 0, "year": 2014, "display": "2014.05"}, {"folder": "20140622 2014.6.22 포항 가족나들이", "p": 52, "v": 0, "year": 2014, "display": "2014.06"}, {"folder": "14 화성", "p": 15, "v": 0, "year": 2014, "display": "2014.07"}, {"folder": "20140705 2014.7.5 강화도 데이트", "p": 56, "v": 0, "year": 2014, "display": "2014.07"}, {"folder": "20140712 2014.7.12 화성행궁 데이트", "p": 15, "v": 0, "year": 2014, "display": "2014.07"}, {"folder": "0803", "p": 11, "v": 0, "year": 2014, "display": "2014.08"}, {"folder": "0805", "p": 169, "v": 0, "year": 2014, "display": "2014.08"}, {"folder": "0806", "p": 28, "v": 0, "year": 2014, "display": "2014.08"}, {"folder": "20140803 앙코르와트 가족여행 - 출발전 공항 -", "p": 22, "v": 0, "year": 2014, "display": "2014.08"}, {"folder": "20140804 캄보디아 1일차 -깜퐁플럭,민속촌,야시장-", "p": 304, "v": 0, "year": 2014, "display": "2014.08"}, {"folder": "20140805 캄보디아 2일차 - 앙코르유적군,퍼브스트리트", "p": 300, "v": 0, "year": 2014, "display": "2014.08"}, {"folder": "20140806 캄보디아 3일차 -씨엠립 인근 -", "p": 58, "v": 0, "year": 2014, "display": "2014.08"}, {"folder": "14 연천 부친", "p": 47, "v": 0, "year": 2014, "display": "2014.09"}, {"folder": "20140920 2014.9.20 안성 데이트(중앙대,칠장사)", "p": 50, "v": 0, "year": 2014, "display": "2014.09"}, {"folder": "20140928 2014.9.28 부친과 함께한 연천 나들이", "p": 13, "v": 0, "year": 2014, "display": "2014.09"}, {"folder": "14 결혼기념일", "p": 15, "v": 0, "year": 2014, "display": "2014.10"}, {"folder": "20141005 2014.10.5 프라하에서", "p": 24, "v": 0, "year": 2014, "display": "2014.10"}, {"folder": "14 남한산성", "p": 57, "v": 0, "year": 2014, "display": "2014.11"}, {"folder": "20141129 2014.11.29 남한산성 데이트", "p": 57, "v": 0, "year": 2014, "display": "2014.11"}, {"folder": "20130409 2013.4.9 부친과 함께(승일교,산정호수)", "p": 3, "v": 0, "year": 2013, "display": "2013.04"}, {"folder": "20130616 2013.6.16 천안 데이트", "p": 10, "v": 0, "year": 2013, "display": "2013.06"}, {"folder": "13 승훈 지하철 조사", "p": 41, "v": 0, "year": 2013, "display": "2013.08"}, {"folder": "20130827 2013.8.25 강릉,속초데이트", "p": 14, "v": 0, "year": 2013, "display": "2013.08"}, {"folder": "20130901 2013.9.1 경주 데이트", "p": 64, "v": 0, "year": 2013, "display": "2013.09"}, {"folder": "20130908 2013.9.8 창덕궁 데이트", "p": 50, "v": 0, "year": 2013, "display": "2013.09"}, {"folder": "20130915 2013.9.15 안동 데이트", "p": 71, "v": 0, "year": 2013, "display": "2013.09"}, {"folder": "20131006 2013.10.6 아들과 엄마의 데이트", "p": 11, "v": 0, "year": 2013, "display": "2013.10"}, {"folder": "20131222 2013.12.22 통영 데이트", "p": 17, "v": 0, "year": 2013, "display": "2013.12"}, {"folder": "12 승훈 연대", "p": 11, "v": 0, "year": 2012, "display": "2012.01"}, {"folder": "12 제주 처가", "p": 66, "v": 0, "year": 2012, "display": "2012.01"}, {"folder": "20120619 2012.6.19 경포 데이트", "p": 55, "v": 0, "year": 2012, "display": "2012.06"}, {"folder": "12 목동", "p": 6, "v": 0, "year": 2012, "display": "2012.07"}, {"folder": "12 전곡 부친", "p": 28, "v": 0, "year": 2012, "display": "2012.07"}, {"folder": "12 승훈 실험", "p": 38, "v": 0, "year": 2012, "display": "2012.08"}, {"folder": "12 제천", "p": 25, "v": 0, "year": 2012, "display": "2012.08"}, {"folder": "20120818 2012.8.18 제천 데이트", "p": 25, "v": 0, "year": 2012, "display": "2012.08"}, {"folder": "12 매봉", "p": 17, "v": 0, "year": 2012, "display": "2012.10"}, {"folder": "20121007 2012.10.7 강화 데이트", "p": 13, "v": 0, "year": 2012, "display": "2012.10"}, {"folder": "20121021 2012.10.21 아들과 함께( 매봉 )", "p": 5, "v": 0, "year": 2012, "display": "2012.10"}, {"folder": "11 우면산", "p": 47, "v": 0, "year": 2011, "display": "2011.01"}, {"folder": "11 승훈 초교 교실", "p": 8, "v": 0, "year": 2011, "display": "2011.02"}, {"folder": "11 승훈 초교 졸업", "p": 319, "v": 0, "year": 2011, "display": "2011.02"}, {"folder": "11 중국", "p": 14, "v": 0, "year": 2011, "display": "2011.02"}, {"folder": "11 승훈 중학 교실", "p": 5, "v": 0, "year": 2011, "display": "2011.03"}, {"folder": "11 예술의 전당 부친", "p": 87, "v": 0, "year": 2011, "display": "2011.03"}, {"folder": "11 민지 고교 교실", "p": 16, "v": 0, "year": 2011, "display": "2011.04"}, {"folder": "10 퓰리처 사진 예술의 전당", "p": 87, "v": 0, "year": 2011, "display": "2011.05"}, {"folder": "11 과천", "p": 10, "v": 0, "year": 2011, "display": "2011.05"}, {"folder": "11 생일 승훈", "p": 2, "v": 0, "year": 2011, "display": "2011.05"}, {"folder": "11 유진 할머니 팔순", "p": 73, "v": 0, "year": 2011, "display": "2011.05"}, {"folder": "11 생일 민지", "p": 10, "v": 0, "year": 2011, "display": "2011.06"}, {"folder": "11 인천 골든스카이", "p": 115, "v": 0, "year": 2011, "display": "2011.06"}, {"folder": "11 강화콘도 박이사", "p": 60, "v": 0, "year": 2011, "display": "2011.07"}, {"folder": "11 승훈실험", "p": 53, "v": 0, "year": 2011, "display": "2011.08"}, {"folder": "11 잠실 야구장", "p": 166, "v": 0, "year": 2011, "display": "2011.09"}, {"folder": "20110927 2011.9.27 잠실 데이트", "p": 9, "v": 0, "year": 2011, "display": "2011.09"}, {"folder": "11 유럽 현미", "p": 37, "v": 0, "year": 2011, "display": "2011.11"}, {"folder": "11 남이섬", "p": 26, "v": 0, "year": 2011, "display": "2011.12"}, {"folder": "20111206 2011.12.6 남이섬 데이트", "p": 26, "v": 0, "year": 2011, "display": "2011.12"}, {"folder": "210102 안면도 가족", "p": 236, "v": 0, "year": 2010, "display": "2010.01"}, {"folder": "210106 제주", "p": 884, "v": 0, "year": 2010, "display": "2010.01"}, {"folder": "171225", "p": 288, "v": 0, "year": 2010, "display": "2010.01"}, {"folder": "180101", "p": 544, "v": 0, "year": 2010, "display": "2010.01"}, {"folder": "171_0101", "p": 85, "v": 0, "year": 2010, "display": "2010.01"}, {"folder": "172_0102", "p": 8, "v": 0, "year": 2010, "display": "2010.01"}, {"folder": "10 정동진", "p": 62, "v": 0, "year": 2010, "display": "2010.02"}, {"folder": "1129", "p": 124, "v": 0, "year": 2010, "display": "2010.02"}, {"folder": "10 승훈 야구", "p": 169, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "0517", "p": 1, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "0520", "p": 2, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "0523 네덜란드", "p": 35, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "그랜드바자르", "p": 7, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "블루모스크", "p": 77, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "소피아성당", "p": 46, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "아테네(에기나섬)", "p": 210, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "암스테르담", "p": 111, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "앙카라소금호수", "p": 70, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "에페소", "p": 134, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "인화용", "p": 53, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "전송용", "p": 44, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "카파도키아", "p": 288, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "탁심", "p": 18, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "파묵깔레", "p": 125, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "피에레로티", "p": 49, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "승훈", "p": 49, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "장모", "p": 4, "v": 0, "year": 2010, "display": "2010.05"}, {"folder": "10 대한민국", "p": 39, "v": 0, "year": 2010, "display": "2010.06"}, {"folder": "10 민지 생일", "p": 10, "v": 0, "year": 2010, "display": "2010.06"}, {"folder": "10 부친 생신", "p": 29, "v": 0, "year": 2010, "display": "2010.06"}, {"folder": "11 부친 생신", "p": 27, "v": 0, "year": 2010, "display": "2010.06"}, {"folder": "10 대학로 민들레영토", "p": 26, "v": 0, "year": 2010, "display": "2010.07"}, {"folder": "10 로댕 전시회", "p": 53, "v": 0, "year": 2010, "display": "2010.07"}, {"folder": "10 승훈 영어시험", "p": 5, "v": 0, "year": 2010, "display": "2010.08"}, {"folder": "10 안면도", "p": 373, "v": 0, "year": 2010, "display": "2010.08"}, {"folder": "10 청심", "p": 72, "v": 0, "year": 2010, "display": "2010.08"}, {"folder": "10 광탄", "p": 39, "v": 0, "year": 2010, "display": "2010.09"}, {"folder": "10 신흥중 모교", "p": 6, "v": 0, "year": 2010, "display": "2010.09"}, {"folder": "201009 화담숲", "p": 56, "v": 0, "year": 2010, "display": "2010.09"}, {"folder": "은경", "p": 1, "v": 0, "year": 2010, "display": "2010.09"}, {"folder": "10 결혼기념일", "p": 14, "v": 0, "year": 2010, "display": "2010.10"}, {"folder": "10 세종문화회관", "p": 11, "v": 0, "year": 2010, "display": "2010.10"}, {"folder": "10 중국", "p": 85, "v": 0, "year": 2010, "display": "2010.10"}, {"folder": "10 동대문 부친", "p": 40, "v": 0, "year": 2010, "display": "2010.11"}, {"folder": "10 롯데공연", "p": 29, "v": 0, "year": 2010, "display": "2010.11"}, {"folder": "10 승훈 북 공연", "p": 45, "v": 0, "year": 2010, "display": "2010.11"}, {"folder": "10 승훈 제주 수학여행", "p": 95, "v": 0, "year": 2010, "display": "2010.11"}, {"folder": "민지", "p": 47, "v": 0, "year": 2010, "display": "2010.11"}, {"folder": "10 김장 서초", "p": 6, "v": 0, "year": 2010, "display": "2010.12"}, {"folder": "10 이문세 공연", "p": 60, "v": 0, "year": 2010, "display": "2010.12"}, {"folder": "09 덕수궁 근대미술전", "p": 23, "v": 0, "year": 2009, "display": "2009.01"}, {"folder": "09 서울숲", "p": 13, "v": 0, "year": 2009, "display": "2009.05"}, {"folder": "09 남산 부친", "p": 9, "v": 0, "year": 2009, "display": "2009.09"}, {"folder": "09 인사동", "p": 9, "v": 0, "year": 2009, "display": "2009.09"}, {"folder": "09 중국출장", "p": 25, "v": 0, "year": 2009, "display": "2009.10"}, {"folder": "09 회사 현미", "p": 153, "v": 0, "year": 2009, "display": "2009.10"}, {"folder": "09 등불 축제", "p": 70, "v": 0, "year": 2009, "display": "2009.11"}, {"folder": "09 서울 국립미술관", "p": 212, "v": 0, "year": 2009, "display": "2009.11"}, {"folder": "09 난지 하늘공원", "p": 27, "v": 0, "year": 2009, "display": "2009.12"}, {"folder": "09 민지 마실", "p": 132, "v": 0, "year": 2009, "display": "2009.12"}, {"folder": "08 과천 현대미술관", "p": 54, "v": 0, "year": 2008, "display": "2008.04"}, {"folder": "08 청계천", "p": 8, "v": 0, "year": 2008, "display": "2008.05"}, {"folder": "08 발리", "p": 203, "v": 0, "year": 2008, "display": "2008.08"}, {"folder": "08 용평", "p": 11, "v": 0, "year": 2008, "display": "2008.08"}, {"folder": "08 남이섬", "p": 20, "v": 0, "year": 2008, "display": "2008.12"}, {"folder": "200831 남이섬,마눌,민지", "p": 71, "v": 0, "year": 2008, "display": "2008.31"}, {"folder": "07 청계산", "p": 26, "v": 0, "year": 2007, "display": "2007.04"}, {"folder": "07 허브랜드", "p": 12, "v": 0, "year": 2007, "display": "2007.05"}, {"folder": "07 안면도", "p": 67, "v": 0, "year": 2007, "display": "2007.06"}, {"folder": "07 역사박물관 중국 국보전", "p": 33, "v": 0, "year": 2007, "display": "2007.06"}, {"folder": "07 남이섬", "p": 32, "v": 0, "year": 2007, "display": "2007.12"}, {"folder": "200713 안면도", "p": 64, "v": 0, "year": 2007, "display": "2007.13"}, {"folder": "200728 승훈 부대", "p": 2, "v": 0, "year": 2007, "display": "2007.28"}, {"folder": "06 안면도, 덕산", "p": 72, "v": 0, "year": 2006, "display": "2006.08"}, {"folder": "06 청계천", "p": 24, "v": 0, "year": 2006, "display": "2006.12"}, {"folder": "2005 지호 돌", "p": 14, "v": 0, "year": 2005, "display": "2005"}, {"folder": "2005 헬쓰", "p": 4, "v": 0, "year": 2005, "display": "2005"}, {"folder": "2005 현미 생일", "p": 5, "v": 0, "year": 2005, "display": "2005"}, {"folder": "10 승훈 과천과학관", "p": 29, "v": 0, "year": 2005, "display": "2005.01"}, {"folder": "10 승훈 사이판", "p": 158, "v": 0, "year": 2005, "display": "2005.01"}, {"folder": "12 승훈 에버랜드", "p": 23, "v": 0, "year": 2005, "display": "2005.02"}, {"folder": "05 민지 생일", "p": 36, "v": 0, "year": 2005, "display": "2005.03"}, {"folder": "12 독도 승훈", "p": 81, "v": 0, "year": 2005, "display": "2005.03"}, {"folder": "05 벚꽃", "p": 16, "v": 0, "year": 2005, "display": "2005.04"}, {"folder": "05 양재 시민의 숲", "p": 16, "v": 0, "year": 2005, "display": "2005.04"}, {"folder": "05 양재 아트센터", "p": 3, "v": 0, "year": 2005, "display": "2005.05"}, {"folder": "05 헤이리", "p": 37, "v": 0, "year": 2005, "display": "2005.06"}, {"folder": "05 아침고요 수목원", "p": 24, "v": 0, "year": 2005, "display": "2005.10"}, {"folder": "2004 장기투자", "p": 4, "v": 0, "year": 2004, "display": "2004"}, {"folder": "2004 한탄강댐", "p": 3, "v": 0, "year": 2004, "display": "2004"}, {"folder": "04 아침고요 수목원", "p": 35, "v": 0, "year": 2004, "display": "2004.01"}, {"folder": "05 안면도", "p": 24, "v": 0, "year": 2004, "display": "2004.01"}, {"folder": "05 올림픽 공원", "p": 14, "v": 0, "year": 2004, "display": "2004.01"}, {"folder": "2003 장인 기일", "p": 3, "v": 0, "year": 2003, "display": "2003"}, {"folder": "2001 송년", "p": 5, "v": 0, "year": 2001, "display": "2001"}, {"folder": "01 과천 대공원", "p": 28, "v": 0, "year": 2001, "display": "2001.01"}, {"folder": "11 코엑스 아쿠아 부친", "p": 113, "v": 0, "year": 2000, "display": "2000.01"}, {"folder": "12 용평 처가", "p": 59, "v": 0, "year": 2000, "display": "2000.01"}, {"folder": "13 승훈 영재교육원", "p": 19, "v": 0, "year": 2000, "display": "2000.01"}, {"folder": "13 파주 헤이리", "p": 11, "v": 0, "year": 2000, "display": "2000.01"}, {"folder": "15 청평", "p": 17, "v": 0, "year": 2000, "display": "2000.01"}, {"folder": "20130110 2013.1.10 헤이리 데이트", "p": 8, "v": 0, "year": 2000, "display": "2000.01"}, {"folder": "10 민지 중학졸업", "p": 2, "v": 0, "year": 2000, "display": "2000.02"}, {"folder": "13 북악 팔각정", "p": 25, "v": 0, "year": 2000, "display": "2000.03"}, {"folder": "20130306 2013.3.6 북악팔각정 데이트", "p": 12, "v": 0, "year": 2000, "display": "2000.03"}, {"folder": "20130609 2013.6.9 인천 데이트", "p": 31, "v": 0, "year": 2000, "display": "2000.06"}];
+const ALBUMS=[
+  {keys:["동지중해","크루즈"],title:"동지중해 크루즈",date:"2025.09",desc:"크로아티아·베니스·코토르",cnt:"373장",url:"https://photos.app.goo.gl/wqa8u1xxJtFM2TR87",color:"#4a8c6f"},
+  {keys:["독일"],title:"독일 자유여행",date:"2025.02",desc:"퓌센·로텐부르그·뮌헨",cnt:"338장",url:"https://photos.app.goo.gl/v6T6H1uJ7M9krdYL8",color:"#534AB7"},
+  {keys:["필리핀","보홀"],title:"필리핀 보홀",date:"2024.12",desc:"보홀섬·초콜릿힐",cnt:"501장",url:"https://photos.app.goo.gl/WcaPW74zBUkHEhHW6",color:"#c9a96e"},
+  {keys:["제주"],title:"제주도 여행",date:"2021.01",desc:"제주 전역 가족여행",cnt:"884장",url:"https://photos.app.goo.gl/zCTxeE2R9crTrDUSA",color:"#4a6f8c"},
 ];
-
-let photoRows=[], videoRows=[], allEvents=[], shownCount=50;
-
-function getAlbum(f){ for(const a of ALBUMS) if(a.keys.some(k=>f.includes(k))) return a; return null; }
-
+function getAlbum(f){for(const a of ALBUMS)if(a.keys.some(k=>f.includes(k)))return a;return null;}
 function getTag(f){
   const fl=f.toLowerCase();
-  if(['크루즈','독일','필리핀','보홀','태국','캄보디아','인도','대만','스페인','유럽','크로아티아','베니스','카파도키아','퓌센','몬트리올','뉴욕','보스턴','잔시','오차'].some(k=>fl.includes(k)))
-    return {label:'해외여행',color:'#4a8c6f'};
-  if(['속초','평창','정동진','거제','통영','안면도','진도','광주','홍천','양재','의정부','제주','서귀포','애월','경안','천진암','한남','이태원','양재'].some(k=>fl.includes(k)))
-    return {label:'국내여행',color:'#4a6f8c'};
-  if(['결혼','생축','송년','졸업','추모','장모','아들','민지','구순','잔치','공연','연극'].some(k=>fl.includes(k)))
-    return {label:'가족행사',color:'#8c4a6f'};
-  if(['트레킹','소노캄','흔들','설중','산책','폭포'].some(k=>fl.includes(k)))
-    return {label:'트레킹',color:'#8c6f4a'};
-  return {label:'기타',color:'#5a5652'};
+  if(["크루즈","독일","필리핀","보홀","태국","캄보디아","인도","대만","스페인","유럽","크로아티아","베니스","카파도키아","퓌센","몬트리올","뉴욕","보스턴","잔시"].some(k=>fl.includes(k)))return{label:"해외여행",color:"#4a8c6f"};
+  if(["속초","평창","정동진","거제","통영","안면도","진도","광주","홍천","제주","서귀포","애월","경안","천진암","이태원"].some(k=>fl.includes(k)))return{label:"국내여행",color:"#4a6f8c"};
+  if(["결혼","생축","송년","졸업","추모","장모","아들","민지","구순","공연","연극"].some(k=>fl.includes(k)))return{label:"가족행사",color:"#8c4a6f"};
+  if(["트레킹","소노캄","흔들","설중","산책"].some(k=>fl.includes(k)))return{label:"트레킹",color:"#8c6f4a"};
+  return{label:"기타",color:"#5a5652"};
 }
-
-function parseDate(folder,exif,created){
-  if(exif&&exif.length>=4){const y=exif.substring(0,4),m=exif.substring(5,7)||'';if(parseInt(y)>=1990)return{year:parseInt(y),display:m?`${y}.${m}`:y};}
-  const match=folder.match(/^(\d{4})(\d{2})?/);
-  if(match&&parseInt(match[1])>=1990)return{year:parseInt(match[1]),display:match[2]?`${match[1]}.${match[2]}`:match[1]};
-  if(created&&created.length>=7)return{year:parseInt(created.substring(0,4)),display:`${created.substring(0,4)}.${created.substring(5,7)}`};
-  return null;
-}
-
-function parseCSV(text){
-  const lines=text.split('\n');
-  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).filter(l=>l.trim()).map(line=>{
-    const vals=[];let cur='',inQ=false;
-    for(const ch of line){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){vals.push(cur);cur='';}else cur+=ch;}
-    vals.push(cur);
-    const obj={};headers.forEach((h,i)=>obj[h]=(vals[i]||'').trim());return obj;
-  });
-}
-
-function buildDashboard(){
-  const folderMap={};
-  [...photoRows.map(r=>({...r,_t:'p'})),...videoRows.map(r=>({...r,_t:'v'}))].forEach(r=>{
-    const f=r['상위폴더']||'기타';
-    if(!folderMap[f])folderMap[f]={folder:f,p:0,v:0,exif:r['EXIF촬영날짜']||'',created:r['생성날짜']||''};
-    folderMap[f][r._t]++;
-  });
-
-  allEvents=Object.values(folderMap).map(f=>({...f,dt:parseDate(f.folder,f.exif,f.created)}))
-    .filter(e=>e.dt).sort((a,b)=>b.dt.year-a.dt.year||b.dt.display.localeCompare(a.dt.display));
-
-  const years=allEvents.map(e=>e.dt.year);
-  document.getElementById('sStat').textContent=photoRows.length.toLocaleString();
-  document.getElementById('vStat').textContent=videoRows.length.toLocaleString();
-  document.getElementById('yStat').textContent=`${Math.min(...years)}~${Math.max(...years)}`;
-  document.getElementById('eStat').textContent=allEvents.length.toLocaleString();
-  document.getElementById('statsBar').style.display='grid';
-  document.getElementById('mainNav').style.display='flex';
-
-  shownCount=50;
-  renderTimeline();
-  renderAlbums();
-  renderYearBars();
-}
-
-function renderTimeline(){
-  const list=document.getElementById('tlList');
-  list.innerHTML='';
-  const slice=allEvents.slice(0,shownCount);
-  let curYear=null;
-
-  slice.forEach(e=>{
-    if(e.dt.year!==curYear){
-      curYear=e.dt.year;
-      const yDiv=document.createElement('div');
-      yDiv.className='tl-year';
-      yDiv.textContent=curYear+'년';
-      list.appendChild(yDiv);
-    }
-    const tag=getTag(e.folder);
-    const alb=getAlbum(e.folder);
-    const item=document.createElement('div');
-    item.className='tl-item';
-    item.innerHTML=`
-      <div class="tl-dot" style="background:${tag.color};"></div>
-      <div class="tl-date">${e.dt.display}</div>
-      <div class="tl-body">
-        <div class="tl-title">${e.folder}${e.v>0?`<span class="video-badge">동영상 ${e.v}</span>`:''}${alb?`<a class="tl-link" href="${alb.url}" target="_blank">보기 →</a>`:''}</div>
-        <div class="tl-meta">${tag.label} · 사진 ${e.p}장${e.v?` · 동영상 ${e.v}개`:''}</div>
-      </div>`;
+let shown=60;
+function renderTL(){
+  const list=document.getElementById("tlList");
+  list.innerHTML="";
+  let curY=null;
+  EVENTS.slice(0,shown).forEach(e=>{
+    if(e.year!==curY){curY=e.year;const d=document.createElement("div");d.className="tl-year";d.textContent=curY+"년";list.appendChild(d);}
+    const tag=getTag(e.folder);const alb=getAlbum(e.folder);
+    const item=document.createElement("div");item.className="tl-item";
+    item.innerHTML=`<div class="tl-dot" style="background:${tag.color};"></div><div class="tl-date">${e.display}</div><div class="tl-body"><div class="tl-title">${e.folder}${e.v>0?`<span class="video-badge">동영상 ${e.v}</span>`:""}<br>${alb?`<a class="tl-link" href="${alb.url}" target="_blank">사진 보기 →</a>`:""}</div><div class="tl-meta">${tag.label} · 사진 ${e.p}장${e.v?` · 동영상 ${e.v}개`:""}</div></div>`;
     list.appendChild(item);
   });
-
-  if(allEvents.length>shownCount){
-    const more=document.createElement('div');
-    more.className='load-more';
-    more.textContent=`+ ${allEvents.length-shownCount}개 더 보기`;
-    more.onclick=()=>{shownCount+=50;renderTimeline();};
-    list.appendChild(more);
-  }
+  if(EVENTS.length>shown){const m=document.createElement("div");m.className="load-more";m.textContent=`+ ${EVENTS.length-shown}개 더 보기`;m.onclick=()=>{shown+=60;renderTL();};list.appendChild(m);}
 }
-
-function renderAlbums(){
-  const grid=document.getElementById('albGrid');
-  grid.innerHTML='';
-  ALBUMS.forEach(a=>{
-    const card=document.createElement('div');
-    card.className='album-card';
-    card.innerHTML=`
-      <div class="album-thumb" style="background:${a.color}20;">
-        <div style="width:32px;height:32px;border-radius:8px;background:${a.color};opacity:0.7;"></div>
-      </div>
-      <div class="album-name">${a.title}</div>
-      <div class="album-meta">${a.date} · ${a.cnt}</div>
-      <a class="album-btn" href="${a.url}" target="_blank">Photos에서 보기 →</a>`;
-    grid.appendChild(card);
-  });
+function renderAlb(){
+  const grid=document.getElementById("albGrid");grid.innerHTML="";
+  ALBUMS.forEach(a=>{const card=document.createElement("div");card.className="album-card";
+    card.innerHTML=`<div class="album-thumb" style="background:${a.color}20;"><div style="width:28px;height:28px;border-radius:6px;background:${a.color};opacity:0.7;"></div></div><div class="album-name">${a.title}</div><div class="album-meta">${a.date} · ${a.cnt}</div><a class="album-btn" href="${a.url}" target="_blank">Photos 보기 →</a>`;
+    grid.appendChild(card);});
 }
-
-function renderYearBars(){
-  const yCnt={};
-  allEvents.forEach(e=>{const y=e.dt.year;yCnt[y]=(yCnt[y]||0)+e.p+e.v;});
+function renderYr(){
+  const yCnt={};EVENTS.forEach(e=>{yCnt[e.year]=(yCnt[e.year]||0)+e.p+e.v;});
   const sorted=Object.entries(yCnt).sort((a,b)=>b[0]-a[0]);
   const max=Math.max(...sorted.map(s=>s[1]));
-  const el=document.getElementById('yrBars');
-  el.innerHTML='';
-  sorted.forEach(([y,cnt])=>{
-    const pct=Math.round(cnt/max*100);
-    const hue=200+Math.round(pct*0.8);
-    el.innerHTML+=`
-      <div class="year-row">
-        <span class="year-label">${y}</span>
-        <div class="year-bar-bg"><div class="year-bar-fill" style="width:${pct}%;background:hsl(${hue},50%,45%);"></div></div>
-        <span class="year-count">${cnt.toLocaleString()}</span>
-      </div>`;
+  const el=document.getElementById("yrBars");el.innerHTML="";
+  sorted.forEach(([y,cnt])=>{const pct=Math.round(cnt/max*100);
+    el.innerHTML+=`<div class="year-row"><span class="year-label">${y}</span><div class="year-bar-bg"><div class="year-bar-fill" style="width:${pct}%;background:hsl(${180+pct},45%,42%);"></div></div><span class="year-count">${cnt.toLocaleString()}</span></div>`;
   });
 }
-
-function show(id,btn){
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  btn.classList.add('on');
-}
-
-function setupDrop(dzId,inputId,type){
-  const dz=document.getElementById(dzId),ci=document.getElementById(inputId);
-  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
-  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
-  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])readFile(e.dataTransfer.files[0],type,dz);});
-  ci.addEventListener('change',e=>{if(e.target.files[0])readFile(e.target.files[0],type,dz);});
-}
-
-function readFile(file,type,dz){
-  dz.querySelector('.dz-label').textContent='로딩 중...';
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const rows=parseCSV(e.target.result);
-    if(type==='p')photoRows=rows;else videoRows=rows;
-    dz.classList.add('done');
-    dz.querySelector('.dz-label').textContent=type==='p'?'사진 CSV ✓':'동영상 CSV ✓';
-    dz.querySelector('.dz-sub').textContent=`${rows.length.toLocaleString()}개 로드`;
-    if(photoRows.length>0||videoRows.length>0)buildDashboard();
-  };
-  reader.readAsText(file,'UTF-8');
-}
-
-setupDrop('dz1','ci1','p');
-setupDrop('dz2','ci2','v');
+function show(id,btn){document.querySelectorAll(".sec").forEach(s=>s.classList.remove("on"));document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("on"));document.getElementById(id).classList.add("on");btn.classList.add("on");}
+renderTL();renderAlb();renderYr();
 </script>
 </body>
 </html>
