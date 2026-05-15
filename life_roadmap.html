@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herrsong 인생 2막 마스터 플랜</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Apple SD Gothic Neo','Malgun Gothic','NanumGothic',sans-serif;background:#f0f0f0;padding:12px;font-size:14px;}
+#app{max-width:680px;margin:0 auto;padding-bottom:40px;}
+
+.header{background:#1a120a;border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.header h1{font-size:19px;font-weight:700;color:#c8a96e;margin-bottom:4px;}
+.header .sub{font-size:12px;color:#9a7a4a;margin-bottom:10px;}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.badge{font-size:11px;padding:3px 9px;border-radius:10px;background:rgba(200,169,110,0.2);border:1px solid #c8a96e;color:#c8a96e;}
+.quote-box{cursor:pointer;background:rgba(200,169,110,0.1);border-left:3px solid #c8a96e;padding:10px 12px;border-radius:0 6px 6px 0;}
+.quote-box p{font-size:13px;color:#e8c88a;font-style:italic;line-height:1.65;}
+.quote-box small{font-size:11px;color:#9a7a4a;margin-top:4px;display:block;}
+
+.tabs{display:flex;gap:6px;margin-bottom:12px;}
+.tab{flex:1;padding:10px 4px;font-size:13px;cursor:pointer;border-radius:8px;border:1px solid #ddd;background:#fff;color:#888;font-weight:400;font-family:inherit;}
+.tab.active{border:2px solid #c8a96e;background:#fdf8f0;color:#5a3e1b;font-weight:700;}
+
+.section{display:none;}
+.section.active{display:block;}
+
+/* 여행 카드 */
+.travel-card{border-radius:10px;padding:12px 13px;margin-bottom:9px;cursor:pointer;transition:opacity 0.2s;}
+.travel-card.done{background:#f0f0f0;border:1px solid #ccc;opacity:0.72;}
+.travel-card.normal{background:#fdf8f0;border:1px solid #ddd;}
+.travel-card.peak{background:#fff3e0;border:1.5px solid #c8572a;}
+.travel-card.finale{background:#f0ebff;border:2px solid #533AB7;}
+.travel-card.checked{opacity:0.65;}
+.card-top{display:flex;gap:10px;align-items:flex-start;}
+.card-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.card-body{flex:1;}
+.card-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
+.card-title{font-weight:700;font-size:14px;color:#1a120a;line-height:1.4;}
+.card-title.peak{color:#9e4a0a;}
+.card-title.finale{color:#533AB7;}
+.year-badge{font-size:11px;padding:2px 7px;border-radius:8px;background:#fdf0e0;color:#8b5e1a;border:0.5px solid #c8a96e;white-space:nowrap;flex-shrink:0;}
+.card-sub{font-size:12px;color:#555;margin-top:4px;line-height:1.6;}
+.card-meta{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;}
+.card-cost{font-size:12px;font-weight:700;color:#8b5e1a;}
+.card-ryokan{font-size:12px;color:#777;}
+.card-prep{font-size:11px;color:#777;margin-top:5px;background:rgba(255,255,255,0.65);padding:5px 8px;border-radius:6px;line-height:1.65;}
+.check-icon{font-size:20px;flex-shrink:0;}
+
+.cost-summary{background:#1a120a;border-radius:10px;padding:12px 14px;margin-top:6px;}
+.cost-summary h3{font-size:13px;font-weight:700;color:#c8a96e;margin-bottom:8px;}
+.cost-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid rgba(200,169,110,0.2);font-size:13px;}
+.cost-row span:first-child{color:#9a7a4a;}
+.cost-row span:last-child{color:#c8a96e;font-weight:700;}
+.cost-note{font-size:11px;color:#7a6040;margin-top:8px;line-height:1.7;}
+
+/* 취미 */
+.hobby-section{margin-bottom:18px;}
+.hobby-header{display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:8px;margin-bottom:8px;}
+.hobby-icon{font-size:22px;}
+.hobby-title{font-size:16px;font-weight:700;}
+.stages-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.stage-card{border-radius:8px;padding:10px 11px;cursor:pointer;transition:opacity 0.2s;}
+.stage-card.checked{opacity:0.55;}
+.stage-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.stage-period{font-size:10px;color:#bbb;margin-bottom:2px;}
+.stage-label{font-size:13px;font-weight:700;line-height:1.3;}
+.stage-items{margin-top:7px;padding-left:15px;font-size:12px;color:#555;line-height:1.9;}
+.check-sm{font-size:16px;}
+
+.synergy-box{background:#fdf8f0;border:1.5px solid #c8a96e;border-radius:10px;padding:12px 14px;}
+.synergy-box h3{font-size:13px;font-weight:700;color:#8b5e1a;margin-bottom:8px;}
+.synergy-row{display:flex;gap:8px;padding:6px 0;border-bottom:0.5px solid #ead8b0;font-size:13px;}
+.synergy-key{font-weight:700;color:#c8a96e;min-width:110px;}
+.synergy-val{color:#666;}
+
+/* 루틴 */
+.routine-item{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.routine-time{min-width:50px;font-size:13px;font-weight:700;color:#888;text-align:right;}
+.routine-bar{width:4px;align-self:stretch;border-radius:2px;min-height:46px;}
+.routine-card{flex:1;background:#f9f9f9;border:1px solid #eee;border-radius:9px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+.routine-act{font-size:15px;font-weight:700;}
+.routine-dur{font-size:12px;color:#aaa;padding:2px 9px;background:#efefef;border-radius:10px;}
+
+.annual-box{background:#1a120a;border-radius:10px;padding:12px 14px;margin:18px 0 14px;}
+.annual-box h3{font-size:13px;font-weight:700;color:#c8a96e;margin-bottom:8px;}
+.annual-row{padding:6px 0;border-bottom:0.5px solid rgba(200,169,110,0.2);font-size:12px;}
+.annual-key{color:#c8a96e;font-weight:700;}
+.annual-val{color:#9a7a4a;margin-left:8px;}
+
+.finale-box{border:2px solid #533AB7;border-radius:10px;padding:14px 16px;background:#f0ebff;}
+.finale-box h3{font-size:15px;font-weight:700;color:#533AB7;margin-bottom:10px;}
+.finale-item{font-size:13px;color:#3c3489;padding:6px 0;border-bottom:0.5px solid #d0c8f0;line-height:1.65;}
+.finale-item:last-of-type{border-bottom:none;}
+.finale-quote{margin-top:14px;text-align:center;font-size:13px;font-style:italic;color:#533AB7;font-weight:700;line-height:1.8;}
+
+.footer{text-align:center;margin-top:20px;font-size:11px;color:#bbb;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <h1>Herrsong 인생 2막 마스터 플랜</h1>
+    <div class="sub">2026~2037년 · 63→74세 · 여행 13개 + 취미 4축 + 바이크 7단계</div>
+    <div class="badges">
+      <span class="badge">✈ 13개 여행</span>
+      <span class="badge">🏍 할리 정복</span>
+      <span class="badge">🖌 개인전</span>
+      <span class="badge">🎸 연주회</span>
+      <span class="badge">🌍 영어 완성</span>
+    </div>
+    <div class="quote-box" id="quoteBox" onclick="nextQuote()">
+      <p id="quoteText"></p>
+      <small id="quoteSrc"></small>
+    </div>
+  </div>
+
+  <!-- 탭 -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('travel',this)">✈️ 버킷리스트</button>
+    <button class="tab" onclick="showTab('hobby',this)">🎯 취미 로드맵</button>
+    <button class="tab" onclick="showTab('routine',this)">⏰ 일일 루틴</button>
+  </div>
+
+  <!-- 여행 섹션 -->
+  <div class="section active" id="travel"></div>
+
+  <!-- 취미 섹션 -->
+  <div class="section" id="hobby"></div>
+
+  <!-- 루틴 섹션 -->
+  <div class="section" id="routine"></div>
+
+  <div class="footer">Herrsong 인생 2막 마스터 플랜 · 2026~2037</div>
+</div>
+
+<script>
+const GOLD = "#c8a96e";
+
+// ── 데이터 ──
+const quotes = [
+  {text:"모든 일에 있어서 시간이 부족하지 않을까를 걱정하지 말고, 내가 마음을 바쳐 최선을 다할 수 있을지, 그것을 걱정하라.", src:"정조대왕"},
+  {text:"지금 당장 시작하지 않으면, 영원히 시작하지 못한다.", src:"괴테"},
+  {text:"여행은 편견과 고집, 편협함의 적이다.", src:"마크 트웨인"},
+  {text:"배움에는 나이가 없다. 60세에 시작해도 70세의 당신은 이미 전문가다.", src:"피카소 변용"},
+  {text:"붓을 들면 마음이 고요해진다.", src:"추사 김정희"},
+  {text:"기타 한 음절은 영혼의 한 호흡이다.", src:"작자 미상"},
+  {text:"바람을 느끼지 못하는 자는 결코 자유를 알 수 없다.", src:"라이더 格言"},
+];
+
+const travels = [
+  {year:2026,age:"63·62",icon:"🚢",title:"서지중해 MSC 크루즈",sub:"바르셀로나·발렌시아·마르세유·제노바",cost:"예약완료",prep:"기항지 투어 사전 예약",ryokan:"—",done:true,type:"done"},
+  {year:2027,age:"64·63",icon:"🥾",title:"스페인 산티아고 순례길",sub:"카미노 데 산티아고 단축코스 100km",cost:"300~600만원",prep:"주 3회 5km 도보 훈련 / 트레킹화 6개월 전 구입",ryokan:"스이란 (아라시야마)",done:false,type:"normal"},
+  {year:2028,age:"65·64",icon:"🇳🇴🇬🇧",title:"노르웨이 아틀란틱 로드 + 영국 2주 일주",sub:"베르겐IN → 피오르드·게이랑에르 → 아틀란틱 로드 → 런던·바스·에든버러·하이랜드 OUT",cost:"1,000~1,700만원",prep:"국제운전면허 / 렌터카 6개월 전 / BritRail Pass / ETA 신청 / 해리포터 스튜디오 2개월 전",ryokan:"히가시야마 단풍",done:false,type:"normal"},
+  {year:2029,age:"66·65",icon:"🏔️",title:"남미 한달 — 작은별여행사 28일",sub:"리마→쿠스코→마추픽추→우유니→파타고니아→부에노스아이레스→이과수→우수아이아",cost:"1,800~2,200만원",prep:"황열병 접종(10일 전) / 다이아목스 2주 전 복용 / 마추픽추 입장권 6개월 전",ryokan:"가가야 ★일본 1위",done:false,type:"normal"},
+  {year:2030,age:"67·66",icon:"🦁",title:"아프리카 사파리",sub:"케냐 마사이마라·탄자니아 세렝게티 — 누 대이동 절정기",cost:"700~1,500만원",prep:"황열병·말라리아 접종 / 럭셔리 로지 6개월 전 예약",ryokan:"하코네 후지산",done:false,type:"normal"},
+  {year:2031,age:"68·67",icon:"🥾",title:"뉴질랜드 밀포드 사운드 트레킹",sub:"밀포드 트랙 럭셔리 롯지 패키지 — 트레킹 버킷리스트 피날레",cost:"400~800만원",prep:"DOC 예약 12개월 전 / Ultimate Hikes 패키지",ryokan:"시라카와고 설경",done:false,type:"normal"},
+  {year:2032,age:"69·68",icon:"🇪🇬🚢",title:"이집트 피라미드 (3~4월) + 지중해 럭셔리 크루즈 (5~6월)",sub:"기자·스핑크스·룩소르·나일 크루즈 → 리젠트·실버씨 크루즈 업그레이드!",cost:"2,500~4,000만원",prep:"이집트 e비자 / 얼리버드 예약(2030 하반기) / 포멀 의상 준비",ryokan:"닛코 단풍",done:false,type:"peak"},
+  {year:2033,age:"70·69",icon:"🎭",title:"오페라 투어 + 부르고뉴 와이너리",sub:"빈 국립오페라·잘츠부르크 음악제 (7~8월) → 부르고뉴 포도 수확 (9~10월)",cost:"900~1,800만원",prep:"잘츠부르크 음악제 6~12개월 전 예약 필수 / 샤토 숙소 예약",ryokan:"다마노유 (유후인)",done:false,type:"normal"},
+  {year:2034,age:"71·70",icon:"🌌",title:"노르웨이 오로라 관측 + 일본 료칸 벚꽃",sub:"트롬쇠 오로라 (1~2월) → 아리마온센 벚꽃 리커버리 (3~4월)",cost:"700~1,500만원",prep:"영하 20도 방한 장비 / 오로라 전망대 숙소 예약",ryokan:"고쇼보 (아리마온센)",done:false,type:"normal"},
+  {year:2035,age:"72·71",icon:"🚢",title:"북유럽 발트해 럭셔리 크루즈 14박",sub:"코펜하겐→피오르드→스톡홀름→헬싱키→탈린 (백야 시즌)",cost:"2,200~3,500만원",prep:"얼리버드 예약 (2033 하반기) / 갑판 스위트 업그레이드 고려",ryokan:"이세 신궁",done:false,type:"peak"},
+  {year:2037,age:"74·73",icon:"🏆",title:"남극 탐험 크루즈 — 버킷리스트 피날레!",sub:"드레이크 해협·펭귄·빙하·고래 / 코스타→MSC→리젠트→남극 크루즈 여정 완결",cost:"2,000~5,000만원",prep:"1년 전 예약 필수(선석 극소) / 심폐 건강검진 / 멀미약 강력 처방",ryokan:"타와라야 ★240년",done:false,type:"finale"},
+];
+
+const hobbies = [
+  {id:"cal",icon:"🖌️",title:"서예",color:"#8b5e1a",bg:"#fdf8f0",border:"#c8a96e",stages:[
+    {p:"2026",l:"기초 다지기",items:["문방사우 구비","해서체 기본획","천자문 시작","매일 30분"],ms:false},
+    {p:"2027",l:"★천자문 완주",items:["천자문 1회 완주","임서 반복","문화원 수강"],ms:true},
+    {p:"2028~29",l:"행서 입문",items:["왕희지 행서","여행 감상 한시","소품 20점 완성"],ms:false},
+    {p:"2030~31",l:"창작 도전",items:["개인 서체 탐색","지인 선물 작품","작품집 원고"],ms:false},
+    {p:"2032~33",l:"★여행 시리즈",items:["13개 여행 한시","작품집 출판 준비"],ms:true},
+    {p:"2034~36",l:"전시 준비",items:["작품 정리·편집","소규모 전시 기획"],ms:false},
+    {p:"2037",l:"🏆 개인전!",items:["소규모 개인전","남극 귀환 기념"],ms:true},
+  ]},
+  {id:"eng",icon:"🗣️",title:"영어회화",color:"#0c447c",bg:"#e6f1fb",border:"#378ADD",stages:[
+    {p:"2026",l:"★서바이벌 완성",items:["AI 코치 앱 매일","크루즈·호텔 표현","MSC 크루즈 실전"],ms:true},
+    {p:"2027",l:"자유 대화",items:["원어민 화상 월 4회","BBC 팟캐스트","산티아고 영어"],ms:false},
+    {p:"2028~29",l:"★인솔자 없이!",items:["렌터카 협상","노르웨이·영국 자유","남미 투어 협상"],ms:true},
+    {p:"2030~31",l:"의료·긴급",items:["사파리 가이드 대화","고산병 약국 표현"],ms:false},
+    {p:"2032~33",l:"★격식 영어",items:["이집트 투어 협상","오페라 예약","와이너리 소믈리에"],ms:true},
+    {p:"2034~35",l:"선상 영어",items:["크루즈 선상 강연","외국인 친구 사귀기"],ms:false},
+    {p:"2037",l:"🏆 탐험 영어!",items:["남극 탐험대원 대화","12년 영어 완결"],ms:true},
+  ]},
+  {id:"git",icon:"🎸",title:"포크기타",color:"#3c3489",bg:"#eeedfe",border:"#7F77DD",stages:[
+    {p:"2026 상",l:"★재기동!",items:["F코드 집중","Am·G·C·D 정비","첫 곡 완주"],ms:true},
+    {p:"2026 하",l:"레퍼토리",items:["광화문 연가","먼지가 되어","소규모 연주"],ms:false},
+    {p:"2027~28",l:"여행 연계곡",items:["Country Roads ♪","Sound of Silence ♪","Let It Be ♪"],ms:false},
+    {p:"2029",l:"★10곡 완성!",items:["핑거스타일 입문","부부 듀엣 연습"],ms:true},
+    {p:"2030~32",l:"심화 편곡",items:["클래식 기타 편곡","오페라 테마 편곡"],ms:false},
+    {p:"2033~35",l:"★유튜브 업로드",items:["레퍼토리 20곡","가족 앙상블 준비"],ms:true},
+    {p:"2037",l:"🏆 가족 연주회!",items:["미니 가족 콘서트","남극 귀환 기념"],ms:true},
+  ]},
+  {id:"bik",icon:"🏍️",title:"바이크",color:"#185fa5",bg:"#e6f1fb",border:"#378ADD",stages:[
+    {p:"2026",l:"★아퀼라125 입문!",items:["바이크 학원 교육","시트고 710mm","삼동·양평 라이딩"],ms:true},
+    {p:"2027",l:"숙달",items:["한강 정기 라이딩","1박 투어 도전","동호회 가입"],ms:false},
+    {p:"2028",l:"★2종 소형 취득",items:["기능시험 집중","혼다 레블 300","쿼터급 입문"],ms:true},
+    {p:"2029~30",l:"쿼터 투어링",items:["동해안 1박 투어","남해안 2박 투어"],ms:false},
+    {p:"2031~32",l:"미들급 투어링",items:["전국 해안 라이딩","할리 딜러 시승"],ms:false},
+    {p:"2033",l:"🏆 할리 입문!",items:["스포스터 S or 소프테일","★로망 실현!"],ms:true},
+    {p:"2035~",l:"전국 일주",items:["로드 글라이드","해안도로 전국 일주"],ms:true},
+  ]},
+];
+
+const routine = [
+  {time:"07:00",act:"기상·산책",dur:"30분",color:"#4a7a4a"},
+  {time:"09:00",act:"서예 연습",dur:"30분",color:"#8b5e1a"},
+  {time:"09:30",act:"영어 AI코치",dur:"20분",color:"#0c447c"},
+  {time:"10:00",act:"기타 연습",dur:"20분",color:"#3c3489"},
+  {time:"주말",act:"바이크 라이딩",dur:"자유",color:"#185fa5"},
+  {time:"저녁",act:"디지털 뮤지엄",dur:"주 2회",color:"#666"},
+];
+
+// ── 상태 ──
+let quoteIdx = 0;
+const checks = {};
+
+function nextQuote() {
+  quoteIdx = (quoteIdx + 1) % quotes.length;
+  renderQuote();
+}
+function renderQuote() {
+  document.getElementById('quoteText').textContent = '"' + quotes[quoteIdx].text + '"';
+  document.getElementById('quoteSrc').textContent = '— ' + quotes[quoteIdx].src + ' · 탭해서 다음 경구 👆';
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleCheck(key) {
+  checks[key] = !checks[key];
+  const el = document.getElementById('chk_' + key);
+  const card = document.getElementById('card_' + key);
+  if (el) el.textContent = checks[key] ? '✅' : '☐';
+  if (card) card.classList.toggle('checked', checks[key]);
+}
+
+// ── 렌더링 ──
+function renderTravel() {
+  const el = document.getElementById('travel');
+  let html = '<div style="font-size:12px;color:#888;margin-bottom:10px;">크루즈: 코스타(2025)→MSC(2026)→리젠트(2032)→남극(2037) · 탭해서 달성 체크</div>';
+
+  travels.forEach((t, i) => {
+    const key = 't' + i;
+    const titleColor = t.type==='finale' ? '#533AB7' : t.type==='peak' ? '#9e4a0a' : '#1a120a';
+    html += `<div class="travel-card ${t.done?'done':t.type}" id="card_${key}" onclick="${t.done?'':("toggleCheck('"+key+"')")}">
+      <div class="card-top">
+        <div class="card-icon">${t.icon}</div>
+        <div class="card-body">
+          <div class="card-title-row">
+            <span class="card-title" style="color:${titleColor}">${t.title}</span>
+            <span class="year-badge">${t.year}년 (${t.age}세)</span>
+            <span class="check-icon" id="chk_${key}">${t.done?'✅':'☐'}</span>
+          </div>
+          <div class="card-sub">${t.sub}</div>
+          <div class="card-meta">
+            <span class="card-cost">💰 ${t.cost}</span>
+            <span class="card-ryokan">🗾 료칸: ${t.ryokan}</span>
+          </div>
+          <div class="card-prep">📋 ${t.prep}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  html += `<div class="cost-summary">
+    <h3>총 예상 비용 (2인 기준)</h3>
+    <div class="cost-row"><span>절약 시나리오</span><span>약 1억원</span></div>
+    <div class="cost-row"><span>평균 시나리오</span><span>약 1억 7,000만원</span></div>
+    <div class="cost-row"><span>럭셔리 풀코스</span><span>약 2억 5,000만원+</span></div>
+    <div class="cost-note">연평균 약 1,500~2,200만원 (12년 분산) · 배당·임대 수입으로 충분히 커버 가능</div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+function renderHobby() {
+  const el = document.getElementById('hobby');
+  let html = '';
+
+  hobbies.forEach(h => {
+    html += `<div class="hobby-section">
+      <div class="hobby-header" style="background:${h.bg};border:1.5px solid ${h.border};">
+        <span class="hobby-icon">${h.icon}</span>
+        <span class="hobby-title" style="color:${h.color}">${h.title}</span>
+      </div>
+      <div class="stages-grid">`;
+
+    h.stages.forEach((s, si) => {
+      const key = h.id + '_' + si;
+      const bg = s.ms ? h.bg : '#f9f9f9';
+      const border = s.ms ? `1.5px solid ${h.border}` : '1px solid #e0e0e0';
+      html += `<div class="stage-card" id="card_${key}" style="background:${bg};border:${border};" onclick="toggleCheck('${key}')">
+        <div class="stage-top">
+          <div>
+            <div class="stage-period">${s.p}</div>
+            <div class="stage-label" style="color:${s.ms?h.color:'#333'}">${s.l}</div>
+          </div>
+          <span class="check-sm" id="chk_${key}">☐</span>
+        </div>
+        <ul class="stage-items">${s.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+      </div>`;
+    });
+
+    html += '</div></div>';
+  });
+
+  html += `<div class="synergy-box">
+    <h3>✨ 취미 간 시너지</h3>
+    ${[
+      ["서예 × 여행","각 여행지 감상을 작품으로 → 기억이 예술이 됨"],
+      ["기타 × 여행","여행지 테마곡을 현지에서 연주 → 감동 배가"],
+      ["영어 × 여행","인솔자 없이 직접 소통 → 진짜 여행"],
+      ["바이크 × 일상","퇴근 후 라이딩으로 스트레스 해소"],
+      ["뮤지엄 × 전체","서예·기타·여행·바이크 모든 기록 한 곳에"],
+    ].map(([k,v])=>`<div class="synergy-row"><span class="synergy-key">${k}</span><span class="synergy-val">${v}</span></div>`).join('')}
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+function renderRoutine() {
+  const el = document.getElementById('routine');
+  let html = '<div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.75;">하루 70분으로 서예·영어·기타 세 가지를 모두. 부담 없이 매일 짧게. 여행 전 1개월은 해당 여행지 테마로 집중 전환.</div>';
+
+  routine.forEach(r => {
+    html += `<div class="routine-item">
+      <div class="routine-time">${r.time}</div>
+      <div class="routine-bar" style="background:${r.color}"></div>
+      <div class="routine-card">
+        <span class="routine-act" style="color:${r.color}">${r.act}</span>
+        <span class="routine-dur">${r.dur}</span>
+      </div>
+    </div>`;
+  });
+
+  html += `<div class="annual-box">
+    <h3>📅 연간 점검 리듬</h3>
+    ${[
+      ["여행 직후","사진 정리·태깅 / 서예 감상 작품 / 영어 표현 복습"],
+      ["분기 1회","디지털 뮤지엄 업데이트 / 취미 진행상황 점검"],
+      ["연 1회 (연말)","버킷리스트 달성 체크 / 다음 연도 여행 예약 / 연간 하이라이트 영상"],
+      ["5년 1회","사진집 인쇄 (2030, 2035년)"],
+    ].map(([k,v])=>`<div class="annual-row"><span class="annual-key">${k}</span><span class="annual-val">${v}</span></div>`).join('')}
+  </div>
+
+  <div class="finale-box">
+    <h3>🏆 2037년 74·73세 완성 모습</h3>
+    ${[
+      "✈️ 13개 버킷리스트 + 일본 료칸 11회 완주",
+      "🖌️ 소규모 개인전 또는 서예 작품집 발간",
+      "🗣️ 인솔자 없이 세계 어디서든 편안한 대화",
+      "🎸 가족 앞 미니 연주회 — 애창곡 20곡 이상",
+      "🏍️ 할리데이비슨으로 전국 해안 일주 완결",
+      "📸 12년 인생 2막을 담은 디지털 뮤지엄 완성",
+    ].map(t=>`<div class="finale-item">${t}</div>`).join('')}
+    <div class="finale-quote">"여행은 몸으로, 서예는 손으로, 기타는 가슴으로,<br>영어는 입으로, 바이크는 바람으로 — 세상을 담는 12년"</div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+// ── 초기 실행 ──
+renderQuote();
+renderTravel();
+renderHobby();
+renderRoutine();
+</script>
+</body>
+</html>
